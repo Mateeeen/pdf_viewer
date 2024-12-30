@@ -1,7 +1,6 @@
 // Function to get the current page number
 function getCurrentPageNumber(instance) {
   const currentPageIndex = instance.viewState.currentPageIndex;
-  // If currentPageIndex is a valid number, return the 1-based page number
   if (typeof currentPageIndex === "number" && !isNaN(currentPageIndex)) {
     return currentPageIndex + 1; // 1-based page number
   } else {
@@ -18,7 +17,6 @@ function getNotesForPage(instance, currentPageNumber) {
   }
 
   instance.annotationManager.getAnnotationsForPage(currentPageNumber - 1).then((annotations) => {
-    // Filter annotations to get notes (you can filter based on annotation type)
     const notes = annotations.filter((annotation) => annotation.type === "Text");
 
     if (notes.length > 0) {
@@ -50,7 +48,7 @@ if (pdfFileName && userId) {
 const makeApiCallAndLoadPdf = () => {
   let user_id = localStorage.getItem("user_id");
   const pdfUrl = `https://images.app-pursuenetworking.com/public/files/${pdfFileName}`;
-  const apiUrl = `${globalURl}/get_pdf_page`; // Replace `globalURl` with your actual URL
+  const apiUrl = `${globalURl}/get_pdf_page`;
 
   var xhrUrl = new XMLHttpRequest();
   xhrUrl.open("POST", apiUrl, true);
@@ -80,7 +78,6 @@ const loadPdfWithPage = (currentPage) => {
     const baseUrl = "https://pdf-viewer-orpin.vercel.app/Assets/";
     console.log(baseUrl);
 
-    // Get the saved values from localStorage
     const pdfFileName = localStorage.getItem('pdf_file_name');
     const userId = localStorage.getItem('user_id');
 
@@ -92,27 +89,31 @@ const loadPdfWithPage = (currentPage) => {
         container: "#pspdfkit",
         document: documentUrl,
         initialViewState: new PSPDFKit.ViewState({
-          currentPageIndex: currentPage - 1, // Adjust for zero-based index
+          currentPageIndex: currentPage - 1,
         }),
       })
         .then(function (instance) {
           console.log("PSPDFKit loaded", instance);
 
-          // Check if annotationManager is available
-          if (instance.annotationManager) {
-            // Use the viewState.currentPageIndex.change event to track the current page number
-            instance.addEventListener("viewState.currentPageIndex.change", function (event) {
-              const currentPageNumber = getCurrentPageNumber(instance);
-              if (currentPageNumber !== null) {
-                console.log("Current Page Number: ", currentPageNumber);
+          // Ensure annotationManager is available after PSPDFKit is loaded
+          instance.addEventListener("document.loaded", function () {
+            if (instance.annotationManager) {
+              console.log("Annotation Manager is ready.");
 
-                // Fetch the notes for the current page
-                getNotesForPage(instance, currentPageNumber);
-              }
-            });
-          } else {
-            console.error("Annotation manager not available.");
-          }
+              // Use the viewState.currentPageIndex.change event to track the current page number
+              instance.addEventListener("viewState.currentPageIndex.change", function (event) {
+                const currentPageNumber = getCurrentPageNumber(instance);
+                if (currentPageNumber !== null) {
+                  console.log("Current Page Number: ", currentPageNumber);
+
+                  // Fetch the notes for the current page
+                  getNotesForPage(instance, currentPageNumber);
+                }
+              });
+            } else {
+              console.error("Annotation manager still not available.");
+            }
+          });
         })
         .catch(function (error) {
           console.error("Error loading PSPDFKit: ", error.message);
