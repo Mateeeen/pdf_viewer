@@ -1,6 +1,6 @@
  // Function to get the current page number
  function getCurrentPageNumber(instance) {
-  const currentPageIndex = instance.currentPageIndex;
+  const currentPageIndex = instance.viewState.currentPageIndex;
   // If currentPageIndex is a valid number, return the 1-based page number
   if (typeof currentPageIndex === "number" && !isNaN(currentPageIndex)) {
     return currentPageIndex + 1; // 1-based page number
@@ -74,19 +74,11 @@ const loadPdfWithPage = (currentPage) => {
         .then(function (instance) {
           console.log("PSPDFKit loaded", instance);
 
-          // Wait until the document is loaded and then get the current page
-          instance.addEventListener("documentLoaded", function () {
+          // Use the viewState.currentPageIndex.change event to track the current page number
+          instance.addEventListener("viewState.currentPageIndex.change", function (event) {
             const currentPageNumber = getCurrentPageNumber(instance);
             if (currentPageNumber !== null) {
               console.log("Current Page Number: ", currentPageNumber);
-            }
-          });
-
-          // Optionally, you can also listen for page changes after the initial load
-          instance.addEventListener("pageChange", function () {
-            const currentPageNumber = getCurrentPageNumber(instance);
-            if (currentPageNumber !== null) {
-              console.log("Current Page Number (after change): ", currentPageNumber);
             }
           });
         })
