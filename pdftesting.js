@@ -1,5 +1,5 @@
 setTimeout(() => {
-  const baseUrl = "https://pdf-viewer-orpin.vercel.app/Assets/";
+  const baseUrl = "https://images.app-pursuenetworking.com/public/files/OOPSessional2.pdf";
   console.log(baseUrl);
 
   PSPDFKit.load({
