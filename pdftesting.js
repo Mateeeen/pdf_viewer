@@ -1,5 +1,10 @@
+function getCurrentPageNumber(instance) {
+  const currentPageIndex = instance.currentPageIndex;
+  const currentPageNumber = currentPageIndex + 1; // Page numbers are 1-based
+  return currentPageNumber;
+}
+
 // Step 1: Capture query parameters and save them to localStorage
-const globalURl = "https://social-login.app-pursuenetworking.com";
 const urlParams = new URLSearchParams(window.location.search);
 const pdfFileName = urlParams.get('pdf_file_name');
 const userId = urlParams.get('user_id');
@@ -13,7 +18,7 @@ if (pdfFileName && userId) {
 // Step 2: Make the API call to get the user's last viewed page
 const makeApiCallAndLoadPdf = () => {
   let user_id = localStorage.getItem("user_id");
-  const pdfUrl = `https://images.app-pursuenetworking.com/public/files/Einstein${pdfFileName}`;
+  const pdfUrl = `https://social-login.app-pursuenetworking.com/public/files/${pdfFileName}`;
   const apiUrl = `${globalURl}/get_pdf_page`; // Replace `globalURl` with your actual URL
 
   var xhrUrl = new XMLHttpRequest();
@@ -61,6 +66,12 @@ const loadPdfWithPage = (currentPage) => {
       })
         .then(function (instance) {
           console.log("PSPDFKit loaded", instance);
+
+          // Call the getCurrentPageNumber function to get the page number
+          const currentPageNumber = getCurrentPageNumber(instance);
+          console.log("Current Page Number: ", currentPageNumber);
+
+          // Optionally, you can store or send this page number as needed
         })
         .catch(function (error) {
           console.error(error.message);
