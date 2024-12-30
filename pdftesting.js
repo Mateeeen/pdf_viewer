@@ -25,7 +25,7 @@ if (pdfFileName && userId) {
 // Step 2: Make the API call to get the user's last viewed page
 const makeApiCallAndLoadPdf = () => {
   let user_id = localStorage.getItem("user_id");
-  const pdfUrl = `https://social-login.app-pursuenetworking.com/public/files/${pdfFileName}`;
+  const pdfUrl = `https://images.app-pursuenetworking.com/public/files/${pdfFileName}`;
   const apiUrl = `${globalURl}/get_pdf_page`; // Replace `globalURl` with your actual URL
 
   var xhrUrl = new XMLHttpRequest();
@@ -68,7 +68,7 @@ const loadPdfWithPage = (currentPage) => {
         container: "#pspdfkit",
         document: documentUrl,
         initialViewState: new PSPDFKit.ViewState({
-          currentPageIndex: 2, // Adjust for zero-based index
+          currentPageIndex: currentPage, // Adjust for zero-based index
         }),
       })
         .then(function (instance) {
@@ -79,6 +79,21 @@ const loadPdfWithPage = (currentPage) => {
             const currentPageNumber = getCurrentPageNumber(instance);
             if (currentPageNumber !== null) {
               console.log("Current Page Number: ", currentPageNumber);
+              let user_id = localStorage.getItem("user_id")
+              const url = `${globalURl}/save_pdf_page`;
+              var xhrUrlClose = new XMLHttpRequest();
+
+              xhrUrlClose.open("POST", url, true);
+              xhrUrlClose.setRequestHeader("Content-Type", "application/json");
+              xhrUrlClose.send(
+                JSON.stringify({
+                  user_id,
+                  pdf_url: `https://images.app-pursuenetworking.com/public/files/${pdfFileName}`,
+                  page: currentPageNumber,
+                  notes: null,
+                  draft: null
+                })
+              );
             }
           });
         })
