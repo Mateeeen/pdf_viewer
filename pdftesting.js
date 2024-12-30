@@ -1,4 +1,5 @@
 // Step 1: Capture query parameters and save them to localStorage
+const globalURl = "https://social-login.app-pursuenetworking.com";
 const urlParams = new URLSearchParams(window.location.search);
 const pdfFileName = urlParams.get('pdf_file_name');
 const userId = urlParams.get('user_id');
