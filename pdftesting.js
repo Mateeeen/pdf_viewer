@@ -77,6 +77,8 @@ const loadPdfWithPage = (currentPage) => {
           // Use the viewState.currentPageIndex.change event to track the current page number
           instance.addEventListener("viewState.currentPageIndex.change", function (event) {
             const currentPageNumber = getCurrentPageNumber(instance);
+            getNotesForPage(instance, currentPageNumber);
+
             if (currentPageNumber !== null) {
               console.log("Current Page Number: ", currentPageNumber);
               let user_id = localStorage.getItem("user_id")
@@ -108,3 +110,21 @@ const loadPdfWithPage = (currentPage) => {
 
 // Call the function to make the API request before loading the PDF
 makeApiCallAndLoadPdf();
+
+function getNotesForPage(instance, currentPageNumber) {
+  instance.annotationManager.getAnnotationsForPage(currentPageNumber - 1).then((annotations) => {
+    // Filter annotations to get notes (you can filter based on annotation type)
+    const notes = annotations.filter((annotation) => annotation.type === "Text");
+    
+    if (notes.length > 0) {
+      notes.forEach((note) => {
+        console.log(`Note on page ${currentPageNumber}:`, note.contents);
+        // Here, you can store or display the notes as needed
+      });
+    } else {
+      console.log(`No notes found on page ${currentPageNumber}`);
+    }
+  }).catch((error) => {
+    console.error("Error fetching annotations:", error);
+  });
+}
