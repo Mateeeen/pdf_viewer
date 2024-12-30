@@ -1,6 +1,6 @@
 
 setTimeout(()=>{
-    const baseUrl = chrome.runtime.getURL("Assets/");
+    const baseUrl = "https://pdf-viewer-orpin.vercel.app/Assets/";
     console.log(baseUrl)
 
     PSPDFKit.load({
