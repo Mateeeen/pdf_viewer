@@ -12,10 +12,15 @@ function getCurrentPageNumber(instance) {
 
 // Function to get the annotations (notes) for the current page from the PSPDFKit instance
 function getNotesForPage(instance, currentPageNumber) {
+  if (!instance || !instance.annotationManager) {
+    console.error("Annotation manager is not available.");
+    return;
+  }
+
   instance.annotationManager.getAnnotationsForPage(currentPageNumber - 1).then((annotations) => {
     // Filter annotations to get notes (you can filter based on annotation type)
     const notes = annotations.filter((annotation) => annotation.type === "Text");
-    
+
     if (notes.length > 0) {
       notes.forEach((note) => {
         console.log(`Note on page ${currentPageNumber}:`, note.contents);
@@ -93,19 +98,24 @@ const loadPdfWithPage = (currentPage) => {
         .then(function (instance) {
           console.log("PSPDFKit loaded", instance);
 
-          // Use the viewState.currentPageIndex.change event to track the current page number
-          instance.addEventListener("viewState.currentPageIndex.change", function (event) {
-            const currentPageNumber = getCurrentPageNumber(instance);
-            if (currentPageNumber !== null) {
-              console.log("Current Page Number: ", currentPageNumber);
+          // Check if annotationManager is available
+          if (instance.annotationManager) {
+            // Use the viewState.currentPageIndex.change event to track the current page number
+            instance.addEventListener("viewState.currentPageIndex.change", function (event) {
+              const currentPageNumber = getCurrentPageNumber(instance);
+              if (currentPageNumber !== null) {
+                console.log("Current Page Number: ", currentPageNumber);
 
-              // Fetch the notes for the current page
-              getNotesForPage(instance, currentPageNumber);
-            }
-          });
+                // Fetch the notes for the current page
+                getNotesForPage(instance, currentPageNumber);
+              }
+            });
+          } else {
+            console.error("Annotation manager not available.");
+          }
         })
         .catch(function (error) {
-          console.error(error.message);
+          console.error("Error loading PSPDFKit: ", error.message);
         });
     } else {
       console.error('PDF file name or user ID not found in localStorage');
