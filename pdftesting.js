@@ -95,23 +95,23 @@ const loadPdfWithPage = (currentPage) => {
         .then(function (instance) {
           console.log("PSPDFKit loaded", instance);
 
-          // Ensure annotationManager is available after PSPDFKit is loaded
-          instance.addEventListener("document.loaded", function () {
-            if (instance.annotationManager) {
-              console.log("Annotation Manager is ready.");
+          // Add event listener for page changes
+          instance.addEventListener("viewState.currentPageIndex.change", function () {
+            const currentPageNumber = getCurrentPageNumber(instance);
+            if (currentPageNumber !== null) {
+              console.log("Current Page Number: ", currentPageNumber);
 
-              // Use the viewState.currentPageIndex.change event to track the current page number
-              instance.addEventListener("viewState.currentPageIndex.change", function (event) {
-                const currentPageNumber = getCurrentPageNumber(instance);
-                if (currentPageNumber !== null) {
-                  console.log("Current Page Number: ", currentPageNumber);
+              // Fetch and display the annotations for the current page
+              getNotesForPage(instance, currentPageNumber);
+            }
+          });
 
-                  // Fetch the notes for the current page
-                  getNotesForPage(instance, currentPageNumber);
-                }
-              });
-            } else {
-              console.error("Annotation manager still not available.");
+          // Optional: Add event listener for annotations changes
+          instance.addEventListener("annotations.change", function () {
+            const currentPageNumber = getCurrentPageNumber(instance);
+            if (currentPageNumber !== null) {
+              console.log("Annotations have changed on page: ", currentPageNumber);
+              getNotesForPage(instance, currentPageNumber);
             }
           });
         })
