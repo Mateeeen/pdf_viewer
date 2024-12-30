@@ -5,7 +5,7 @@ setTimeout(() => {
   PSPDFKit.load({
     baseUrl,
     container: "#pspdfkit",
-    document: "https://images.app-pursuenetworking.com/public/files/OOPSessional2.pdf",
+    document: "document.pdf",
     initialViewState: new PSPDFKit.ViewState({
       currentPageIndex: 2, // Page numbers are zero-based, so page 5 is index 4.
     }),
