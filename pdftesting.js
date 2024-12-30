@@ -68,7 +68,7 @@ const loadPdfWithPage = (currentPage) => {
         container: "#pspdfkit",
         document: documentUrl,
         initialViewState: new PSPDFKit.ViewState({
-          currentPageIndex: currentPage ? currentPage - 1 : 2, // Adjust for zero-based index
+          currentPageIndex: currentPage, // Adjust for zero-based index
         }),
       })
         .then(function (instance) {
