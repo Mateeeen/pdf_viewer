@@ -1,7 +1,13 @@
-function getCurrentPageNumber(instance) {
+ // Function to get the current page number
+ function getCurrentPageNumber(instance) {
   const currentPageIndex = instance.currentPageIndex;
-  const currentPageNumber = currentPageIndex + 1; // Page numbers are 1-based
-  return currentPageNumber;
+  // If currentPageIndex is a valid number, return the 1-based page number
+  if (typeof currentPageIndex === "number" && !isNaN(currentPageIndex)) {
+    return currentPageIndex + 1; // 1-based page number
+  } else {
+    console.error("Invalid currentPageIndex value:", currentPageIndex);
+    return null;
+  }
 }
 
 // Step 1: Capture query parameters and save them to localStorage
@@ -68,11 +74,21 @@ const loadPdfWithPage = (currentPage) => {
         .then(function (instance) {
           console.log("PSPDFKit loaded", instance);
 
-          // Call the getCurrentPageNumber function to get the page number
-          const currentPageNumber = getCurrentPageNumber(instance);
-          console.log("Current Page Number: ", currentPageNumber);
+          // Wait until the document is loaded and then get the current page
+          instance.addEventListener("documentLoaded", function () {
+            const currentPageNumber = getCurrentPageNumber(instance);
+            if (currentPageNumber !== null) {
+              console.log("Current Page Number: ", currentPageNumber);
+            }
+          });
 
-          // Optionally, you can store or send this page number as needed
+          // Optionally, you can also listen for page changes after the initial load
+          instance.addEventListener("pageChange", function () {
+            const currentPageNumber = getCurrentPageNumber(instance);
+            if (currentPageNumber !== null) {
+              console.log("Current Page Number (after change): ", currentPageNumber);
+            }
+          });
         })
         .catch(function (error) {
           console.error(error.message);
