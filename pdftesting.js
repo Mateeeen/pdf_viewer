@@ -1,5 +1,5 @@
- // Function to get the current page number
- function getCurrentPageNumber(instance) {
+// Function to get the current page number
+function getCurrentPageNumber(instance) {
   const currentPageIndex = instance.viewState.currentPageIndex;
   // If currentPageIndex is a valid number, return the 1-based page number
   if (typeof currentPageIndex === "number" && !isNaN(currentPageIndex)) {
@@ -8,6 +8,25 @@
     console.error("Invalid currentPageIndex value:", currentPageIndex);
     return null;
   }
+}
+
+// Function to get the annotations (notes) for the current page from the PSPDFKit instance
+function getNotesForPage(instance, currentPageNumber) {
+  instance.annotationManager.getAnnotationsForPage(currentPageNumber - 1).then((annotations) => {
+    // Filter annotations to get notes (you can filter based on annotation type)
+    const notes = annotations.filter((annotation) => annotation.type === "Text");
+    
+    if (notes.length > 0) {
+      notes.forEach((note) => {
+        console.log(`Note on page ${currentPageNumber}:`, note.contents);
+        // Here, you can store or display the notes as needed
+      });
+    } else {
+      console.log(`No notes found on page ${currentPageNumber}`);
+    }
+  }).catch((error) => {
+    console.error("Error fetching annotations:", error);
+  });
 }
 
 // Step 1: Capture query parameters and save them to localStorage
@@ -68,7 +87,7 @@ const loadPdfWithPage = (currentPage) => {
         container: "#pspdfkit",
         document: documentUrl,
         initialViewState: new PSPDFKit.ViewState({
-          currentPageIndex: currentPage, // Adjust for zero-based index
+          currentPageIndex: currentPage - 1, // Adjust for zero-based index
         }),
       })
         .then(function (instance) {
@@ -77,25 +96,11 @@ const loadPdfWithPage = (currentPage) => {
           // Use the viewState.currentPageIndex.change event to track the current page number
           instance.addEventListener("viewState.currentPageIndex.change", function (event) {
             const currentPageNumber = getCurrentPageNumber(instance);
-            getNotesForPage(instance, currentPageNumber);
-
             if (currentPageNumber !== null) {
               console.log("Current Page Number: ", currentPageNumber);
-              let user_id = localStorage.getItem("user_id")
-              const url = `${globalURl}/save_pdf_page`;
-              var xhrUrlClose = new XMLHttpRequest();
 
-              xhrUrlClose.open("POST", url, true);
-              xhrUrlClose.setRequestHeader("Content-Type", "application/json");
-              xhrUrlClose.send(
-                JSON.stringify({
-                  user_id,
-                  pdf_url: `https://images.app-pursuenetworking.com/public/files/${pdfFileName}`,
-                  page: currentPageNumber,
-                  notes: null,
-                  draft: null
-                })
-              );
+              // Fetch the notes for the current page
+              getNotesForPage(instance, currentPageNumber);
             }
           });
         })
@@ -110,21 +115,3 @@ const loadPdfWithPage = (currentPage) => {
 
 // Call the function to make the API request before loading the PDF
 makeApiCallAndLoadPdf();
-
-function getNotesForPage(instance, currentPageNumber) {
-  instance.annotationManager.getAnnotationsForPage(currentPageNumber - 1).then((annotations) => {
-    // Filter annotations to get notes (you can filter based on annotation type)
-    const notes = annotations.filter((annotation) => annotation.type === "Text");
-    
-    if (notes.length > 0) {
-      notes.forEach((note) => {
-        console.log(`Note on page ${currentPageNumber}:`, note.contents);
-        // Here, you can store or display the notes as needed
-      });
-    } else {
-      console.log(`No notes found on page ${currentPageNumber}`);
-    }
-  }).catch((error) => {
-    console.error("Error fetching annotations:", error);
-  });
-}
