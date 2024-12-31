@@ -53,12 +53,13 @@ const loadPdfWithPage = (currentPage) => {
           currentPageIndex: currentPage - 1,
         }),
         toolbarItems: [
-          { type: "goBack" },            // Go Back button
-          { type: "search" },            // Search button
-          { type: "rotate" },            // Rotate button
-          { type: "share" },             // Share button
-          { type: "annotations" },       // Annotations button
-          // More toolbar items can be added here
+          { type: "search" },             // Search button
+          { type: "zoom-in" },            // Zoom In button
+          { type: "zoom-out" },           // Zoom Out button
+          { type: "annotate" },           // Annotation tools (text, ink, highlighter)
+          { type: "print" },              // Print button
+          { type: "export-pdf" },         // Export PDF button
+          // Add more valid types as needed
         ],
       })
         .then(function (instance) {
