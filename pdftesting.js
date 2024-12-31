@@ -54,7 +54,7 @@ const loadPdfWithPage = (currentPage) => {
         }),
       })
         .then(function (instance) {
-          console.log("PSPDFKit loaded");
+          console.log("PSPDFKit loaded",instance);
 
           // Fetch and log annotations using supported events
           // instance.addEventListener("annotations.load", (annotations) => {
@@ -97,25 +97,10 @@ const loadPdfWithPage = (currentPage) => {
           //   });
           // });
           setTimeout(()=>{
-            instance.getAnnotations(0).then(function (annotations) {
-              annotations.forEach(annotation => {
-                console.log(annotation.pageIndex);
-              });
+            instance.addEventListener("annotationNote.press", () => {
+              console.log("Page changed to: ", instance.viewState.currentPageIndex + 1);
+            });
             
-              // Filter annotations by type
-              annotations.filter(annotation => {
-                return annotation instanceof PSPDFKit.Annotations.InkAnnotation;
-              })
-            
-              // Filter annotations at a specific point
-              const pointInFirstPage = new PSPDFKit.Geometry.Point({ x: 20, y: 30 });
-              const annotationsAtPointInPage = annotationsOnFirstPage.filter(annotation => {
-                return annotation.boundingBox.isPointInside(pointInFirstPage);
-              });
-            
-              // Get the number of currently loaded annotations
-              const totalAnnotations = annotations.size;
-            })
           },5000)
 
           
