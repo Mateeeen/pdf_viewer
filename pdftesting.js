@@ -52,6 +52,7 @@ const loadPdfWithPage = (currentPage) => {
         initialViewState: new PSPDFKit.ViewState({
           currentPageIndex: currentPage - 1,
         }),
+        theme: "dark",  // Use "light" or "dark" theme
         toolbarItems: [
           { type: "sidebar-thumbnails"},
           { type: "sidebar-document-outline"}, 
