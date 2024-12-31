@@ -53,12 +53,12 @@ const loadPdfWithPage = (currentPage) => {
           currentPageIndex: currentPage - 1,
         }),
         toolbarItems: [
-          "goBack",          // Custom or predefined toolbar items (ensure these are valid)
-          "search",          // Search button
-          "rotate",          // Rotate button
-          "share",           // Share button
-          "annotations",     // Add this if you want annotation tools
-          // Avoid including 'THUMBNAILS' if it's not supported in your version
+          { type: "goBack" },            // Go Back button
+          { type: "search" },            // Search button
+          { type: "rotate" },            // Rotate button
+          { type: "share" },             // Share button
+          { type: "annotations" },       // Annotations button
+          // More toolbar items can be added here
         ],
       })
         .then(function (instance) {
