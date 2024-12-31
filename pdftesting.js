@@ -53,11 +53,12 @@ const loadPdfWithPage = (currentPage) => {
           currentPageIndex: currentPage - 1,
         }),
         toolbarItems: [
-          PSPDFKit.ToolbarItem.THUMBNAILS,
-          PSPDFKit.ToolbarItem.ROTATE,
-          PSPDFKit.ToolbarItem.SHARE,
-          // Remove annotation tools by not including them
-          // e.g., don't include the annotation tools like Text, Highlight, etc.
+          "goBack",          // Custom or predefined toolbar items (ensure these are valid)
+          "search",          // Search button
+          "rotate",          // Rotate button
+          "share",           // Share button
+          "annotations",     // Add this if you want annotation tools
+          // Avoid including 'THUMBNAILS' if it's not supported in your version
         ],
       })
         .then(function (instance) {
