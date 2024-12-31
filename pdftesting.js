@@ -53,8 +53,6 @@ const loadPdfWithPage = (currentPage) => {
           currentPageIndex: currentPage - 1,
         }),
         toolbarItems: [
-          PSPDFKit.ToolbarItem.GO_BACK,
-          PSPDFKit.ToolbarItem.SEARCH,
           PSPDFKit.ToolbarItem.THUMBNAILS,
           PSPDFKit.ToolbarItem.ROTATE,
           PSPDFKit.ToolbarItem.SHARE,
