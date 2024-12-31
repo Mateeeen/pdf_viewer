@@ -59,7 +59,7 @@ const loadPdfWithPage = (currentPage) => {
           { type: "annotate" },           // Annotation tools (text, ink, highlighter)
           { type: "print" },              // Print button
           { type: "export-pdf" },   
-          { type: "note"},
+          { type: "text"},
           { type: "sidebar-thumbnails"},
           { type: "sidebar-document-outline"}, 
           { type: "sidebar-annotations"},
