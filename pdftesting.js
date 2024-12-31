@@ -103,6 +103,9 @@ const loadPdfWithPage = (currentPage) => {
                 annotation.pageIndex = Number(annotation.pageIndex)
                 console.log(`Page ${annotation.pageIndex + 1}:`, annotation.text);
                 console.log("Full Annotation Data:", annotation.text);
+                console.log("Bounding Box:", annotation.boundingBox);
+                console.log("Color:", annotation.color);
+                console.log("Opacity:", annotation.opacity);
               });
               
             });
