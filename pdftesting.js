@@ -57,16 +57,16 @@ const loadPdfWithPage = (currentPage) => {
           console.log("PSPDFKit loaded");
 
           // Fetch and log annotations using supported events
-          instance.addEventListener("annotations.load", (annotations) => {
-            annotations.forEach((annotation) => {
-              if (annotation.type === "Text") {
-                console.log(
-                  `Annotation Loaded (Page ${annotation.pageIndex + 1}):`,
-                  annotation.contents
-                );
-              }
-            });
-          });
+          // instance.addEventListener("annotations.load", (annotations) => {
+          //   annotations.forEach((annotation) => {
+          //     if (annotation.type === "Text") {
+          //       console.log(
+          //         `Annotation Loaded (Page ${annotation.pageIndex + 1}):`,
+          //         annotation.contents
+          //       );
+          //     }
+          //   });
+          // });
 
           instance.addEventListener("annotations.change", (changedAnnotations) => {
             changedAnnotations.forEach((change) => {
@@ -84,18 +84,38 @@ const loadPdfWithPage = (currentPage) => {
             console.log("Page changed to: ", instance.viewState.currentPageIndex + 1);
           });
 
-          // Additional annotation-related events
-          instance.addEventListener("annotations.create", (createdAnnotations) => {
-            createdAnnotations.forEach((annotation) => {
-              console.log("Annotation Created:", annotation);
-            });
-          });
+          // // Additional annotation-related events
+          // instance.addEventListener("annotations.create", (createdAnnotations) => {
+          //   createdAnnotations.forEach((annotation) => {
+          //     console.log("Annotation Created:", annotation);
+          //   });
+          // });
 
-          instance.addEventListener("annotations.delete", (deletedAnnotations) => {
-            deletedAnnotations.forEach((annotation) => {
-              console.log("Annotation Deleted:", annotation);
+          // instance.addEventListener("annotations.delete", (deletedAnnotations) => {
+          //   deletedAnnotations.forEach((annotation) => {
+          //     console.log("Annotation Deleted:", annotation);
+          //   });
+          // });
+
+          instance.getAnnotations(0).then(function (annotations) {
+            annotations.forEach(annotation => {
+              console.log(annotation.pageIndex);
             });
-          });
+          
+            // Filter annotations by type
+            annotations.filter(annotation => {
+              return annotation instanceof PSPDFKit.Annotations.InkAnnotation;
+            })
+          
+            // Filter annotations at a specific point
+            const pointInFirstPage = new PSPDFKit.Geometry.Point({ x: 20, y: 30 });
+            const annotationsAtPointInPage = annotationsOnFirstPage.filter(annotation => {
+              return annotation.boundingBox.isPointInside(pointInFirstPage);
+            });
+          
+            // Get the number of currently loaded annotations
+            const totalAnnotations = annotations.size;
+          })
         })
         .catch(function (error) {
           console.error("Error loading PSPDFKit: ", error.message);
