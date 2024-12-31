@@ -130,7 +130,7 @@ const loadPdfWithPage = (currentPage) => {
             
             addAnnotation(instance, 1, "This is a programmatically added annotation.");
 
-          },5000)
+          },500)
 
           
         })
