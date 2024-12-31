@@ -97,8 +97,17 @@ const loadPdfWithPage = (currentPage) => {
           //   });
           // });
           setTimeout(()=>{
-            instance.addEventListener("annotations.create", () => {
-              console.log("Page changed to: ", instance.viewState.currentPageIndex + 1);
+            instance.addEventListener("annotations.create", (createdAnnotations) => {
+              console.log("Annotations created:");
+              createdAnnotations.forEach((annotation) => {
+                console.log(`Page ${annotation.pageIndex + 1}:`, annotation.contents);
+                console.log("Full Annotation Data:", annotation);
+              });
+            });
+  
+            // Example: Log all current annotations
+            instance.getAnnotations().then((annotations) => {
+              console.log("All annotations currently loaded:", annotations);
             });
             
           },5000)
