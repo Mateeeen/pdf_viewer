@@ -38,7 +38,6 @@ const makeApiCallAndLoadPdf = () => {
 
 // Function to load the PDF using PSPDFKit
 const loadPdfWithPage = (currentPage) => {
-  setTimeout(() => {
     const baseUrl = "https://pdf-viewer-orpin.vercel.app/Assets/";
     const pdfFileName = localStorage.getItem("pdf_file_name");
 
@@ -63,7 +62,8 @@ const loadPdfWithPage = (currentPage) => {
           { type: "text"},
           { type: "highlighter"},         // Annotation tools (text, ink, highlighter)
           { type: "print" },              // Print button
-          { type: "export-pdf" },   
+          { type: "export-pdf" }, 
+          { type: "pager"}  
             // Export PDF button
           // Add more valid types as needed
         ],
@@ -139,7 +139,6 @@ const loadPdfWithPage = (currentPage) => {
     } else {
       console.error("PDF file name not found in localStorage");
     }
-  }, 500);
 };
 
 // Call the function to make the API request and load the PDF
