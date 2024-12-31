@@ -58,7 +58,12 @@ const loadPdfWithPage = (currentPage) => {
           { type: "zoom-out" },           // Zoom Out button
           { type: "annotate" },           // Annotation tools (text, ink, highlighter)
           { type: "print" },              // Print button
-          { type: "export-pdf" },         // Export PDF button
+          { type: "export-pdf" },   
+          { type: "note"},
+          { type: "sidebar-thumbnails"},
+          { type: "sidebar-document-outline"}, 
+          { type: "sidebar-annotations"},
+          { type: "highlighter"},     // Export PDF button
           // Add more valid types as needed
         ],
       })
