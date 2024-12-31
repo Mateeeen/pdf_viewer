@@ -97,7 +97,7 @@ const loadPdfWithPage = (currentPage) => {
           //   });
           // });
           setTimeout(()=>{
-            instance.addEventListener("annotationNote.press", () => {
+            instance.addEventListener("annotations.create", () => {
               console.log("Page changed to: ", instance.viewState.currentPageIndex + 1);
             });
             
