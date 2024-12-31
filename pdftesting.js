@@ -59,11 +59,12 @@ const loadPdfWithPage = (currentPage) => {
           { type: "search" },             // Search button
           { type: "zoom-in" },            // Zoom In button
           { type: "zoom-out" },           // Zoom Out button
-          { type: "annotate" },           // Annotation tools (text, ink, highlighter)
+          { type: "annotate" },     
+          { type: "text"},
+          { type: "highlighter"},         // Annotation tools (text, ink, highlighter)
           { type: "print" },              // Print button
           { type: "export-pdf" },   
-          { type: "text"},
-          { type: "highlighter"},     // Export PDF button
+            // Export PDF button
           // Add more valid types as needed
         ],
       })
