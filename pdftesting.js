@@ -60,7 +60,10 @@ const loadPdfWithPage = (currentPage) => {
           instance.addEventListener("annotations.load", (annotations) => {
             annotations.forEach((annotation) => {
               if (annotation.type === "Text") {
-                console.log(`Annotation Loaded (Page ${annotation.pageIndex + 1}):`, annotation.contents);
+                console.log(
+                  `Annotation Loaded (Page ${annotation.pageIndex + 1}):`,
+                  annotation.contents
+                );
               }
             });
           });
@@ -68,7 +71,10 @@ const loadPdfWithPage = (currentPage) => {
           instance.addEventListener("annotations.change", (changedAnnotations) => {
             changedAnnotations.forEach((change) => {
               if (change.type === "Text") {
-                console.log(`Annotation Changed (Page ${change.pageIndex + 1}):`, change.contents);
+                console.log(
+                  `Annotation Changed (Page ${change.pageIndex + 1}):`,
+                  change.contents
+                );
               }
             });
           });
@@ -76,6 +82,19 @@ const loadPdfWithPage = (currentPage) => {
           // Additional listener for logging current page index changes
           instance.addEventListener("viewState.currentPageIndex.change", () => {
             console.log("Page changed to: ", instance.viewState.currentPageIndex + 1);
+          });
+
+          // Additional annotation-related events
+          instance.addEventListener("annotations.create", (createdAnnotations) => {
+            createdAnnotations.forEach((annotation) => {
+              console.log("Annotation Created:", annotation);
+            });
+          });
+
+          instance.addEventListener("annotations.delete", (deletedAnnotations) => {
+            deletedAnnotations.forEach((annotation) => {
+              console.log("Annotation Deleted:", annotation);
+            });
           });
         })
         .catch(function (error) {
