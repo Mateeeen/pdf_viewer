@@ -52,6 +52,15 @@ const loadPdfWithPage = (currentPage) => {
         initialViewState: new PSPDFKit.ViewState({
           currentPageIndex: currentPage - 1,
         }),
+        toolbarItems: [
+          PSPDFKit.ToolbarItem.GO_BACK,
+          PSPDFKit.ToolbarItem.SEARCH,
+          PSPDFKit.ToolbarItem.THUMBNAILS,
+          PSPDFKit.ToolbarItem.ROTATE,
+          PSPDFKit.ToolbarItem.SHARE,
+          // Remove annotation tools by not including them
+          // e.g., don't include the annotation tools like Text, Highlight, etc.
+        ],
       })
         .then(function (instance) {
           console.log("PSPDFKit loaded",instance);
