@@ -107,9 +107,9 @@ const loadPdfWithPage = (currentPage) => {
             });
   
             // Example: Log all current annotations
-            instance.getAnnotations().then((annotations) => {
-              console.log("All annotations currently loaded:", annotations);
-            });
+            // instance.getAnnotations().then((annotations) => {
+            //   console.log("All annotations currently loaded:", annotations);
+            // });
             
           },5000)
 
