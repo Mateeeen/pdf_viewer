@@ -101,15 +101,15 @@ const loadPdfWithPage = (currentPage) => {
               console.log("Annotations created:");
               createdAnnotations.forEach((annotation) => {
                 annotation.pageIndex = Number(annotation.pageIndex)
-                console.log(`Page ${annotation.pageIndex + 1}:`, annotation.contents);
-                console.log("Full Annotation Data:", annotation);
+                console.log(`Page ${annotation.pageIndex + 1}:`, annotation.text);
+                console.log("Full Annotation Data:", annotation.text);
               });
               
             });
   
             // Example: Log all current annotations
             
-            addAnnotation(instance, 0, "This is a programmatically added annotation.");
+            addAnnotation(instance, 1, "This is a programmatically added annotation.");
 
           },5000)
 
