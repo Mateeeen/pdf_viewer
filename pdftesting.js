@@ -55,6 +55,7 @@ const loadPdfWithPage = (currentPage) => {
           { type: "sidebar-thumbnails"},
           { type: "sidebar-document-outline"}, 
           { type: "sidebar-annotations"},
+          { type: "pager"},  
           { type: "search" },             // Search button
           { type: "zoom-in" },            // Zoom In button
           { type: "zoom-out" },           // Zoom Out button
@@ -63,7 +64,7 @@ const loadPdfWithPage = (currentPage) => {
           { type: "highlighter"},         // Annotation tools (text, ink, highlighter)
           { type: "print" },              // Print button
           { type: "export-pdf" }, 
-          { type: "pager"}  
+          
             // Export PDF button
           // Add more valid types as needed
         ],
