@@ -100,6 +100,7 @@ const loadPdfWithPage = (currentPage) => {
             instance.addEventListener("annotations.create", (createdAnnotations) => {
               console.log("Annotations created:");
               createdAnnotations.forEach((annotation) => {
+                annotation.pageIndex = Number(annotation.pageIndex)
                 console.log(`Page ${annotation.pageIndex + 1}:`, annotation.contents);
                 console.log("Full Annotation Data:", annotation);
               });
