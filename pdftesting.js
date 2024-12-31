@@ -139,7 +139,7 @@ const loadPdfWithPage = (currentPage) => {
     } else {
       console.error("PDF file name not found in localStorage");
     }
-  }, 5000);
+  }, 500);
 };
 
 // Call the function to make the API request and load the PDF
