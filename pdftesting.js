@@ -137,7 +137,10 @@ const addAnnotation = (instance, pageIndex, content) => {
       width: 200, // Width of the annotation box
       height: 50, // Height of the annotation box
     }),
-    text: content, // The content of the annotation
+    text: {
+      format: "plain", // Text format (can be "plain" or "html")
+      value: content,   // The content of the annotation
+    },
     color: PSPDFKit.Color.fromHex("#FF0000"), // Red text color
     creatorName: "Admin", // Optional: Set the creator's name
   });
