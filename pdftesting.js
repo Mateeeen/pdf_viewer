@@ -116,7 +116,7 @@ const loadPdfWithPage = (currentPage) => {
               // Get the number of currently loaded annotations
               const totalAnnotations = annotations.size;
             })
-          })
+          },5000)
 
           
         })
