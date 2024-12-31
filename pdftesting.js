@@ -1,50 +1,15 @@
-// Function to get the current page number
-function getCurrentPageNumber(instance) {
-  const currentPageIndex = instance.viewState.currentPageIndex;
-  if (typeof currentPageIndex === "number" && !isNaN(currentPageIndex)) {
-    return currentPageIndex + 1; // 1-based page number
-  } else {
-    console.error("Invalid currentPageIndex value:", currentPageIndex);
-    return null;
-  }
-}
-
-// Function to get the annotations (notes) for the current page from the PSPDFKit instance
-function getNotesForPage(instance, currentPageNumber) {
-  if (!instance || !instance.annotationManager) {
-    console.error("Annotation manager is not available.");
-    return;
-  }
-
-  instance.annotationManager.getAnnotationsForPage(currentPageNumber - 1).then((annotations) => {
-    const notes = annotations.filter((annotation) => annotation.type === "Text");
-
-    if (notes.length > 0) {
-      notes.forEach((note) => {
-        console.log(`Note on page ${currentPageNumber}:`, note.contents);
-        // Here, you can store or display the notes as needed
-      });
-    } else {
-      console.log(`No notes found on page ${currentPageNumber}`);
-    }
-  }).catch((error) => {
-    console.error("Error fetching annotations:", error);
-  });
-}
-
-// Step 1: Capture query parameters and save them to localStorage
 const globalURl = "https://social-login.app-pursuenetworking.com";
 const urlParams = new URLSearchParams(window.location.search);
-const pdfFileName = urlParams.get('pdf_file_name');
-const userId = urlParams.get('user_id');
+const pdfFileName = urlParams.get("pdf_file_name");
+const userId = urlParams.get("user_id");
 
 // Save to localStorage
 if (pdfFileName && userId) {
-  localStorage.setItem('pdf_file_name', pdfFileName);
-  localStorage.setItem('user_id', userId);
+  localStorage.setItem("pdf_file_name", pdfFileName);
+  localStorage.setItem("user_id", userId);
 }
 
-// Step 2: Make the API call to get the user's last viewed page
+// Function to make the API call and load the PDF
 const makeApiCallAndLoadPdf = () => {
   let user_id = localStorage.getItem("user_id");
   const pdfUrl = `https://images.app-pursuenetworking.com/public/files/${pdfFileName}`;
@@ -63,27 +28,23 @@ const makeApiCallAndLoadPdf = () => {
   xhrUrl.onreadystatechange = function () {
     if (xhrUrl.readyState == 4 && xhrUrl.status == 200) {
       let userData = JSON.parse(xhrUrl.responseText);
-      console.log("Pdf count get api");
       let currentPage = userData.page; // Get the page from the API response
 
-      // Step 3: Load the PDF using PSPDFKit
+      // Load the PDF with the retrieved page
       loadPdfWithPage(currentPage);
     }
   };
 };
 
-// Step 3: Load the PDF using PSPDFKit
+// Function to load the PDF using PSPDFKit
 const loadPdfWithPage = (currentPage) => {
   setTimeout(() => {
     const baseUrl = "https://pdf-viewer-orpin.vercel.app/Assets/";
-    console.log(baseUrl);
+    const pdfFileName = localStorage.getItem("pdf_file_name");
 
-    const pdfFileName = localStorage.getItem('pdf_file_name');
-    const userId = localStorage.getItem('user_id');
-
-    if (pdfFileName && userId) {
+    if (pdfFileName) {
       const documentUrl = `https://social-login.app-pursuenetworking.com/public/files/${pdfFileName}`;
-      
+
       PSPDFKit.load({
         baseUrl,
         container: "#pspdfkit",
@@ -93,36 +54,38 @@ const loadPdfWithPage = (currentPage) => {
         }),
       })
         .then(function (instance) {
-          console.log("PSPDFKit loaded", instance);
+          console.log("PSPDFKit loaded");
 
-          // Add event listener for page changes
-          instance.addEventListener("viewState.currentPageIndex.change", function () {
-            const currentPageNumber = getCurrentPageNumber(instance);
-            if (currentPageNumber !== null) {
-              console.log("Current Page Number: ", currentPageNumber);
-
-              // Fetch and display the annotations for the current page
-              getNotesForPage(instance, currentPageNumber);
-            }
+          // Fetch and log annotations using supported events
+          instance.addEventListener("annotations.load", (annotations) => {
+            annotations.forEach((annotation) => {
+              if (annotation.type === "Text") {
+                console.log(`Annotation Loaded (Page ${annotation.pageIndex + 1}):`, annotation.contents);
+              }
+            });
           });
 
-          // Optional: Add event listener for annotations changes
-          instance.addEventListener("annotations.change", function () {
-            const currentPageNumber = getCurrentPageNumber(instance);
-            if (currentPageNumber !== null) {
-              console.log("Annotations have changed on page: ", currentPageNumber);
-              getNotesForPage(instance, currentPageNumber);
-            }
+          instance.addEventListener("annotations.change", (changedAnnotations) => {
+            changedAnnotations.forEach((change) => {
+              if (change.type === "Text") {
+                console.log(`Annotation Changed (Page ${change.pageIndex + 1}):`, change.contents);
+              }
+            });
+          });
+
+          // Additional listener for logging current page index changes
+          instance.addEventListener("viewState.currentPageIndex.change", () => {
+            console.log("Page changed to: ", instance.viewState.currentPageIndex + 1);
           });
         })
         .catch(function (error) {
           console.error("Error loading PSPDFKit: ", error.message);
         });
     } else {
-      console.error('PDF file name or user ID not found in localStorage');
+      console.error("PDF file name not found in localStorage");
     }
   }, 5000);
 };
 
-// Call the function to make the API request before loading the PDF
+// Call the function to make the API request and load the PDF
 makeApiCallAndLoadPdf();
