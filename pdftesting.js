@@ -96,7 +96,24 @@ const loadPdfWithPage = (currentPage) => {
 
           // Additional listener for logging current page index changes
           instance.addEventListener("viewState.currentPageIndex.change", () => {
+
             console.log("Page changed to: ", instance.viewState.currentPageIndex + 1);
+            let user_id = localStorage.getItem("user_id")
+              const url = `${globalURl}/save_pdf_page`;
+              var xhrUrlClose = new XMLHttpRequest();
+
+              xhrUrlClose.open("POST", url, true);
+              xhrUrlClose.setRequestHeader("Content-Type", "application/json");
+              xhrUrlClose.send(
+                JSON.stringify({
+                  user_id,
+                  pdf_url: `https://images.app-pursuenetworking.com/public/files/${pdfFileName}`,
+                  page: instance.viewState.currentPageIndex + 1,
+                  notes: null,
+                  draft: null
+                })
+              );
+            
           });
 
           // // Additional annotation-related events
@@ -171,3 +188,6 @@ const addAnnotation = (instance, pageIndex, content) => {
       console.error("Failed to add annotation:", error);
     });
 };
+
+
+
