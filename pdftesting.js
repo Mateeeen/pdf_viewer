@@ -104,14 +104,13 @@ const loadPdfWithPage = (currentPage) => {
                 console.log(`Page ${annotation.pageIndex + 1}:`, annotation.contents);
                 console.log("Full Annotation Data:", annotation);
               });
-              instance.getAnnotations().then((annotations) => {
-                console.log("All annotations currently loaded:", annotations);
-              });
+              
             });
   
             // Example: Log all current annotations
             
-            
+            addAnnotation(instance, 0, "This is a programmatically added annotation.");
+
           },5000)
 
           
@@ -127,3 +126,28 @@ const loadPdfWithPage = (currentPage) => {
 
 // Call the function to make the API request and load the PDF
 makeApiCallAndLoadPdf();
+
+// Function to add an annotation to a specific page
+const addAnnotation = (instance, pageIndex, content) => {
+  const newAnnotation = new PSPDFKit.Annotations.TextAnnotation({
+    pageIndex: pageIndex, // The page where the annotation will appear (0-based index)
+    boundingBox: new PSPDFKit.Geometry.Rect({
+      left: 100, // Position of the annotation on the page (x-coordinate)
+      top: 100,  // Position of the annotation on the page (y-coordinate)
+      width: 200, // Width of the annotation box
+      height: 50, // Height of the annotation box
+    }),
+    text: content, // The content of the annotation
+    color: PSPDFKit.Color.fromHex("#FF0000"), // Red text color
+    creatorName: "Admin", // Optional: Set the creator's name
+  });
+
+  instance
+    .create(newAnnotation)
+    .then(() => {
+      console.log("Annotation added successfully!");
+    })
+    .catch((error) => {
+      console.error("Failed to add annotation:", error);
+    });
+};
