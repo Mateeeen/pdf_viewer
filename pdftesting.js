@@ -221,18 +221,17 @@ const addAnnotation = (instance, pageIndex, content) => {
 const createComment = async (instance, id) => {
   try {
     // Create a new comment
-    const newComment = {
+    const newComment = new PSPDFKit.Comment({
       pageIndex: 0, // The page index where the comment will be created
-      text: "This is a new comment.",
+      text: {
+        format: "plain",
+        value: "This is a new comment.",
+      },
       creatorName: "Admin", // Optional: Set the creator's name
-    };
-
-    // Create the comment using the comments.create event
-    instance.addEventListener('comments.create', (event) => {
-      event.preventDefault();
-      instance.comments.create(newComment);
     });
-    instance.comments.create(newComment);
+
+    // Create the comment using the instance.create method
+    await instance.create(newComment);
 
     console.log("Comment added successfully!");
   } catch (error) {
