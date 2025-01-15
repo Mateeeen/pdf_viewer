@@ -133,7 +133,7 @@ const loadPdfWithPage = (currentPage) => {
             instance.addEventListener("annotations.create", (createdAnnotations) => {
               console.log("Annotations created:");
               createdAnnotations.forEach((annotation) => {
-                createComment(annotation.id)
+                createComment(instance, annotation.id)
                 annotation.pageIndex = Number(annotation.pageIndex)
                 console.log(`Page ${annotation.pageIndex + 1}:`, annotation.text);
                 console.log("Full Annotation Data:", annotation.description);
@@ -219,7 +219,7 @@ const addAnnotation = (instance, pageIndex, content) => {
     });
 };
 
-const createComment = async (id) => {
+const createComment = async (instance, id) => {
   try {
     const comment = new PSPDFKit.Comment({
       id: PSPDFKit.generateInstantId(), // Generate a unique ID for the comment
