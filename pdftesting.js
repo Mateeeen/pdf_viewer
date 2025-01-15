@@ -184,14 +184,10 @@ const addAnnotation = (instance, pageIndex, content) => {
     new PSPDFKit.Geometry.Rect({ left: 10, top: 10, width: 200, height: 10 }),
     new PSPDFKit.Geometry.Rect({ left: 10, top: 25, width: 200, height: 10 })
   ]);
-  var annotation = new PSPDFKit.Annotations.HighlightAnnotation({
+  var annotation = new PSPDFKit.Annotations.NoteAnnotation({
     pageIndex: 0,
-    rects: rects,
-    text: {
-      format: "xhtml", // Text format (can be "plain" or "html")
-      value: content,   // The content of the annotation
-    },
-    boundingBox: PSPDFKit.Geometry.Rect.union(rects)
+    text: { format: "plain", value : "Remember the milk" },
+    boundingBox: new PSPDFKit.Geometry.Rect({ left: 10, top: 20, width: 30, height: 40 }),
   });
 
 
