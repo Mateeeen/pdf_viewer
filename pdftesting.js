@@ -150,7 +150,7 @@ const loadPdfWithPage = (currentPage) => {
                 console.log(`Comment on Page ${comment.pageIndex + 1}:`);
                 console.log("Author:", comment.authorName);
                 console.log("Contents:", comment.contents);
-                console.log("Bounding Box:", comment.boundingBox);
+                console.log("Bounding Box:", comment.lines);
                 console.log("text", comment.text);
               });
             });
