@@ -233,7 +233,7 @@ const createComment = async (instance, id) => {
     };
 
     // Add the new annotation to the instance
-    await instance.addAnnotation(newAnnotation);
+    await instance.annotations.add(newAnnotation);
 
     // Create a new comment
     const newComment = {
@@ -244,7 +244,7 @@ const createComment = async (instance, id) => {
     };
 
     // Add the new comment to the instance
-    await instance.addComment(newComment);
+    await instance.comments.add(newComment);
 
     console.log('Comment added successfully!');
   } catch (error) {
