@@ -220,6 +220,22 @@ const addAnnotation = (instance, pageIndex, content) => {
 
 const createComment = async (instance, id) => {
   try {
+    // Create a new TextMarkupAnnotation
+    const newAnnotation = new PSPDFKit.Annotations.TextMarkupAnnotation({
+      pageIndex: 0, // The page index where the annotation will be created
+      boundingBox: new PSPDFKit.Geometry.Rect({
+        left: 100,
+        top: 100,
+        width: 200,
+        height: 50,
+      }),
+    });
+
+    // Add the new annotation to the instance
+    const annotations = await instance.getAnnotations();
+    annotations.push(newAnnotation);
+    await instance.setAnnotations(annotations);
+
     // Create a new comment
     const newComment = new PSPDFKit.Comment({
       pageIndex: 0, // The page index where the comment will be created
@@ -228,7 +244,7 @@ const createComment = async (instance, id) => {
         value: "This is a new comment.",
       },
       creatorName: "Admin", // Optional: Set the creator's name
-      rootId: id, // Provide the annotation ID as the rootId
+      rootId: newAnnotation.id, // Associate the comment with the new annotation
     });
 
     // Create the comment using the instance.create method
