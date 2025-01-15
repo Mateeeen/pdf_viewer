@@ -221,7 +221,7 @@ const addAnnotation = (instance, pageIndex, content) => {
 const createComment = async (instance, id) => {
   try {
     // Create a new annotation
-    const newAnnotation = await instance.create({
+    const newAnnotation = {
       type: 'TextMarkupAnnotation',
       pageIndex: 0, // The page index where the annotation will be created
       boundingBox: new PSPDFKit.Geometry.Rect({
@@ -230,25 +230,25 @@ const createComment = async (instance, id) => {
         width: 200,
         height: 50,
       }),
-    });
+    };
+
+    // Add the new annotation to the instance
+    await instance.addAnnotation(newAnnotation);
 
     // Create a new comment
-    const newComment = new PSPDFKit.Comment({
+    const newComment = {
       pageIndex: 0, // The page index where the comment will be created
-      text: {
-        format: "plain",
-        value: "This is a new comment.",
-      },
-      creatorName: "Admin", // Optional: Set the creator's name
+      text: 'This is a new comment.',
+      creatorName: 'Admin', // Optional: Set the creator's name
       rootId: newAnnotation.id, // Associate the comment with the new annotation
-    });
+    };
 
-    // Create the comment using the instance.create method
-    await instance.create(newComment);
+    // Add the new comment to the instance
+    await instance.addComment(newComment);
 
-    console.log("Comment added successfully!");
+    console.log('Comment added successfully!');
   } catch (error) {
-    console.error("Error adding comment:", error);
+    console.error('Error adding comment:', error);
   }
 };
 
