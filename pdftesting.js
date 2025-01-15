@@ -185,7 +185,7 @@ const addAnnotation = (instance, pageIndex, content) => {
     new PSPDFKit.Geometry.Rect({ left: 10, top: 25, width: 200, height: 10 })
   ]);
   var annotation = new PSPDFKit.Annotations.HighlightAnnotation({
-    pageIndex: 1,
+    pageIndex: 0,
     rects: rects,
     text: {
       format: "xhtml", // Text format (can be "plain" or "html")
