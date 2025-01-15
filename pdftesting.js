@@ -133,7 +133,7 @@ const loadPdfWithPage = (currentPage) => {
             instance.addEventListener("annotations.create", (createdAnnotations) => {
               console.log("Annotations created:");
               createdAnnotations.forEach((annotation) => {
-                createComment(instance, annotation.id)
+                // createComment(instance, annotation.id)
                 annotation.pageIndex = Number(annotation.pageIndex)
                 console.log(`Page ${annotation.pageIndex + 1}:`, annotation.text);
                 console.log("Full Annotation Data:", annotation.description);
@@ -162,7 +162,7 @@ const loadPdfWithPage = (currentPage) => {
             // Example: Log all current annotations
             
             addAnnotation(instance, 1, "This is a programmatically added annotation.");
-
+            createComment(instance, "This is a programmatically added annotation.")
           },500)
 
           
@@ -219,29 +219,26 @@ const addAnnotation = (instance, pageIndex, content) => {
     });
 };
 
-const createComment = async (instance, id) => {
-  try {
-    const comments = await instance.getComments();
-    console.log("Existing comments:", comments);
-
-    // Create a new comment
+function createComment(instance, id){
     const newComment = new PSPDFKit.Comment({
-      pageIndex: 0,
-      text: { format: "plain", value : "Remember the milk" },
-      boundingBox: new PSPDFKit.Geometry.Rect({ left: 10, top: 20, width: 30, height: 40 }),
+      pageIndex: 0, // The page index where the comment will be created
+      text: new PSPDFKit.Text({
+        format: "plain",
+        value: "This is a new comment.",
+      }),
+      creatorName: "Admin", // Optional: Set the creator's name
     });
 
     // Add the new comment using the appropriate PSPDFKit method
-    await instance.update({
-      type: "comments",
-      insert: [newComment],
-    });
+    instance.create(newComment)
+      .then(() => {
+        console.log("Comment added successfully!");
+      })
+      .catch((error) => {
+        console.error("Failed to add comment:", error);
+      });
+    }
 
-    console.log("Comment added successfully!");
-  } catch (error) {
-    console.error("Error adding comment:", error);
-  }
-};
 
 setTimeout(()=>{
  
