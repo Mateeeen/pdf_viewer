@@ -232,8 +232,10 @@ const createComment = async (instance, id) => {
       }),
     };
 
-    // Add the new annotation to the instance
-    await instance.annotations.add(newAnnotation);
+    // Get the existing annotations
+    const annotations = await instance.getAnnotations();
+    annotations.push(newAnnotation);
+    await instance.setAnnotations(annotations);
 
     // Create a new comment
     const newComment = {
@@ -243,8 +245,10 @@ const createComment = async (instance, id) => {
       rootId: newAnnotation.id, // Associate the comment with the new annotation
     };
 
-    // Add the new comment to the instance
-    await instance.comments.add(newComment);
+    // Get the existing comments
+    const comments = await instance.getComments();
+    comments.push(newComment);
+    await instance.setComments(comments);
 
     console.log('Comment added successfully!');
   } catch (error) {
