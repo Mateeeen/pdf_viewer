@@ -142,6 +142,18 @@ const loadPdfWithPage = (currentPage) => {
               });
               
             });
+
+            instance.addEventListener("comments.create", (createdComments) => {
+              console.log("Comments created:");
+              createdComments.forEach((comment) => {
+                console.log(`Comment on Page ${comment.pageIndex + 1}:`);
+                console.log("Author:", comment.authorName);
+                console.log("Contents:", comment.contents);
+                console.log("Bounding Box:", comment.boundingBox);
+                console.log("Created At:", comment.createdAt);
+              });
+            });
+            
   
             // Example: Log all current annotations
             
