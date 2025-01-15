@@ -226,14 +226,11 @@ const createComment = async (instance, id) => {
 
     // Create a new comment
     const newComment = new PSPDFKit.Comment({
-      id: PSPDFKit.generateInstantId(), // Generate a unique ID
       text: { format: "xhtml", value : "<p>Remember the milk</p>" },
-      rootId: id, // Set to null for standalone comments
       creatorName: "Your Name", // Set the creator's name
       createdAt: new Date(),
       updatedAt: new Date(),
       pageIndex: 0, // Page where the comment resides
-      customData: { key: "value" }, // Add custom metadata if needed
     });
 
     // Add the new comment using the appropriate PSPDFKit method
