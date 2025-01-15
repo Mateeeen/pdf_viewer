@@ -237,7 +237,7 @@ function createComment(instance, id){
     });
 
     // Add the comment to the document
-    const comments = instance.get("comments");
+    const comments = instance.getComments();
     instance.set("comments", comments.push(comment));
 
     console.log("Comment added successfully!");
