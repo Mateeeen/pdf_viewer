@@ -133,6 +133,7 @@ const loadPdfWithPage = (currentPage) => {
             instance.addEventListener("annotations.create", (createdAnnotations) => {
               console.log("Annotations created:");
               createdAnnotations.forEach((annotation) => {
+                createComment(annotation.id)
                 annotation.pageIndex = Number(annotation.pageIndex)
                 console.log(`Page ${annotation.pageIndex + 1}:`, annotation.text);
                 console.log("Full Annotation Data:", annotation.description);
@@ -218,24 +219,34 @@ const addAnnotation = (instance, pageIndex, content) => {
     });
 };
 
-const addStandaloneComment = (instance, content, authorName) => {
-  const commentData = new PSPDFKit.Comments.Comment({
-    id: PSPDFKit.generateInstantId(), // Generate a unique ID for the comment
-    content: content,                 // The content of the comment
-    authorName: authorName,           // The name of the comment creator
-    createdAt: new Date().toISOString(), // Timestamp for creation
-    updatedAt: new Date().toISOString(), // Timestamp for last update
-  });
-
-  instance
-    .create(commentData)
-    .then(() => {
-      console.log("Standalone comment added successfully!");
-    })
-    .catch((error) => {
-      console.error("Failed to add standalone comment:", error);
+const createComment = async (id) => {
+  try {
+    const comment = new PSPDFKit.Comment({
+      id: PSPDFKit.generateInstantId(), // Generate a unique ID for the comment
+      text: "<p>This is a new comment</p>", // Comment text in XHTML or plain text
+      rootId: id, // Replace with the ID of an existing annotation
+      creatorName: "Abdul", // Name of the comment creator
+      createdAt: new Date(), // Timestamp of creation
+      updatedAt: new Date(), // Timestamp of last update
+      pageIndex: 0, // Page index where the comment is located
+      customData: { key: "value" }, // Optional custom data
     });
+
+    // Add the comment to the document
+    const comments = await instance.get("comments");
+    await instance.set("comments", comments.push(comment));
+
+    console.log("Comment added successfully!");
+  } catch (error) {
+    console.error("Error adding comment:", error);
+  }
 };
+
+setTimeout(()=>{
+ 
+},10000)
+
+
 
 // Example Usage
 
