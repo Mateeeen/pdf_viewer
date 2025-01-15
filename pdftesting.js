@@ -226,11 +226,9 @@ const createComment = async (instance, id) => {
 
     // Create a new comment
     const newComment = new PSPDFKit.Comment({
-      text: { format: "xhtml", value : "<p>Remember the milk</p>" },
-      creatorName: "Your Name", // Set the creator's name
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      pageIndex: 0, // Page where the comment resides
+      pageIndex: 0,
+      text: { format: "plain", value : "Remember the milk" },
+      boundingBox: new PSPDFKit.Geometry.Rect({ left: 10, top: 20, width: 30, height: 40 }),
     });
 
     // Add the new comment using the appropriate PSPDFKit method
