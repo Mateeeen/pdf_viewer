@@ -233,8 +233,8 @@ const createComment = async (instance, id) => {
     });
 
     // Add the comment to the document
-    const comments = await instance.get("comments");
-    await instance.set("comments", comments.push(comment));
+    const comments = instance.get("comments");
+    instance.set("comments", comments.push(comment));
 
     console.log("Comment added successfully!");
   } catch (error) {
