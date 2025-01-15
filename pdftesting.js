@@ -154,14 +154,13 @@ const loadPdfWithPage = (currentPage) => {
                 console.log("text", comment.text);
               });
             });
-
-            addStandaloneComment(instance, "This is a standalone comment.", "Admin");
+            // addStandaloneComment(instance, "This is a standalone comment.", "Admin");
 
             
   
             // Example: Log all current annotations
             
-            // addAnnotation(instance, 1, "This is a programmatically added annotation.");
+            addAnnotation(instance, 1, "This is a programmatically added annotation.");
 
           },500)
 
@@ -180,24 +179,41 @@ makeApiCallAndLoadPdf();
 
 // Function to add an annotation to a specific page
 const addAnnotation = (instance, pageIndex, content) => {
-  const newAnnotation = new PSPDFKit.Annotations.TextAnnotation({
-    pageIndex: pageIndex, // The page where the annotation will appear (0-based index)
-    boundingBox: new PSPDFKit.Geometry.Rect({
-      left: 100, // Position of the annotation on the page (x-coordinate)
-      top: 100,  // Position of the annotation on the page (y-coordinate)
-      width: 200, // Width of the annotation box
-      height: 50, // Height of the annotation box
-    }),
+
+  var rects = PSPDFKit.Immutable.List([
+    new PSPDFKit.Geometry.Rect({ left: 10, top: 10, width: 200, height: 10 }),
+    new PSPDFKit.Geometry.Rect({ left: 10, top: 25, width: 200, height: 10 })
+  ]);
+  var annotation = new PSPDFKit.Annotations.HighlightAnnotation({
+    pageIndex: 1,
+    rects: rects,
     text: {
       format: "xhtml", // Text format (can be "plain" or "html")
       value: content,   // The content of the annotation
     },
-    color: PSPDFKit.Color.fromHex("#FF0000"), // Red text color
-    creatorName: "Admin", // Optional: Set the creator's name
+    boundingBox: PSPDFKit.Geometry.Rect.union(rects)
   });
 
+
+
+  // const newAnnotation = new PSPDFKit.Annotations.TextAnnotation({
+  //   pageIndex: pageIndex, // The page where the annotation will appear (0-based index)
+  //   boundingBox: new PSPDFKit.Geometry.Rect({
+  //     left: 100, // Position of the annotation on the page (x-coordinate)
+  //     top: 100,  // Position of the annotation on the page (y-coordinate)
+  //     width: 200, // Width of the annotation box
+  //     height: 50, // Height of the annotation box
+  //   }),
+  //   text: {
+  //     format: "xhtml", // Text format (can be "plain" or "html")
+  //     value: content,   // The content of the annotation
+  //   },
+  //   color: PSPDFKit.Color.fromHex("#FF0000"), // Red text color
+  //   creatorName: "Admin", // Optional: Set the creator's name
+  // });
+
   instance
-    .create(newAnnotation)
+    .create(annotation)
     .then(() => {
       console.log("Annotation added successfully!");
     })
