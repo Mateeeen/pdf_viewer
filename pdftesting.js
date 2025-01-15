@@ -184,7 +184,7 @@ const addAnnotation = (instance, pageIndex, content) => {
     new PSPDFKit.Geometry.Rect({ left: 10, top: 10, width: 200, height: 10 }),
     new PSPDFKit.Geometry.Rect({ left: 10, top: 25, width: 200, height: 10 })
   ]);
-  var annotation = new PSPDFKit.Annotations.NoteAnnotation({
+  var annotation = new PSPDFKit.Annotations.CommentAnnotation({
     pageIndex: 0,
     text: { format: "plain", value : "Remember the milk" },
     boundingBox: new PSPDFKit.Geometry.Rect({ left: 10, top: 20, width: 30, height: 40 }),
