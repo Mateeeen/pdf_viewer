@@ -130,22 +130,23 @@ const loadPdfWithPage = (currentPage) => {
           //   });
           // });
           setTimeout(()=>{
-            instance.addEventListener("annotations.create", (createdAnnotations) => {
-              console.log("Annotations created:");
-              createdAnnotations.forEach((annotation) => {
-                annotation.pageIndex = Number(annotation.pageIndex)
-                console.log(`Page ${annotation.pageIndex + 1}:`, annotation.text);
-                console.log("Full Annotation Data:", annotation.description);
-                console.log("Bounding Box:", annotation.boundingBox);
-                console.log("Color:", annotation.color);
-                console.log("Opacity:", annotation.opacity);
-              });
+            // instance.addEventListener("annotations.create", (createdAnnotations) => {
+            //   console.log("Annotations created:");
+            //   createdAnnotations.forEach((annotation) => {
+            //     annotation.pageIndex = Number(annotation.pageIndex)
+            //     console.log(`Page ${annotation.pageIndex + 1}:`, annotation.text);
+            //     console.log("Full Annotation Data:", annotation.description);
+            //     console.log("Bounding Box:", annotation.boundingBox);
+            //     console.log("Color:", annotation.color);
+            //     console.log("Opacity:", annotation.opacity);
+            //   });
               
-            });
+            // });
 
             instance.addEventListener("comments.create", (createdComments) => {
               console.log("Comments created:");
               createdComments.forEach((comment) => {
+                console.log(comment)
                 console.log(`Comment on Page ${comment.pageIndex + 1}:`);
                 console.log("Author:", comment.authorName);
                 console.log("Contents:", comment.contents);
@@ -157,7 +158,7 @@ const loadPdfWithPage = (currentPage) => {
   
             // Example: Log all current annotations
             
-            addAnnotation(instance, 1, "This is a programmatically added annotation.");
+            // addAnnotation(instance, 1, "This is a programmatically added annotation.");
 
           },500)
 
