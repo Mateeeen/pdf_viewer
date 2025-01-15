@@ -220,9 +220,6 @@ const addAnnotation = (instance, pageIndex, content) => {
 
 const createComment = async (instance, id) => {
   try {
-    // Get the annotation ID (rootId) from the instance
-    const annotationId = await instance.getAnnotationById(id);
-
     // Create a new comment
     const newComment = new PSPDFKit.Comment({
       pageIndex: 0, // The page index where the comment will be created
