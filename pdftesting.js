@@ -219,23 +219,28 @@ const addAnnotation = (instance, pageIndex, content) => {
     });
 };
 
-function createComment(instance, id){
+const createComment = async (instance, id) => {
   try {
-    console.log(instance)
-    const comment = new PSPDFKit.Comment({
-      id: PSPDFKit.generateInstantId(), // Generate a unique ID for the comment
-      text: "<p>This is a new comment</p>", // Comment text in XHTML or plain text
-      rootId: id, // Replace with the ID of an existing annotation
-      creatorName: "Abdul", // Name of the comment creator
-      createdAt: new Date(), // Timestamp of creation
-      updatedAt: new Date(), // Timestamp of last update
-      pageIndex: 0, // Page index where the comment is located
-      customData: { key: "value" }, // Optional custom data
+    const comments = await instance.getComments();
+    console.log("Existing comments:", comments);
+
+    // Create a new comment
+    const newComment = new PSPDFKit.Comment({
+      id: PSPDFKit.generateInstantId(), // Generate a unique ID
+      text: "<p>This is a new standalone comment</p>", // Comment content
+      rootId: id, // Set to null for standalone comments
+      creatorName: "Your Name", // Set the creator's name
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      pageIndex: 0, // Page where the comment resides
+      customData: { key: "value" }, // Add custom metadata if needed
     });
 
-    // Add the comment to the document
-    const comments = instance.getComments();
-    instance.set("comments", comments.push(comment));
+    // Add the new comment using the appropriate PSPDFKit method
+    await instance.update({
+      type: "comments",
+      insert: [newComment],
+    });
 
     console.log("Comment added successfully!");
   } catch (error) {
