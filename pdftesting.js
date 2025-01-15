@@ -151,9 +151,12 @@ const loadPdfWithPage = (currentPage) => {
                 console.log("Author:", comment.authorName);
                 console.log("Contents:", comment.contents);
                 console.log("Bounding Box:", comment.boundingBox);
-                console.log("Created At:", comment.createdAt);
+                console.log("text", comment.text);
               });
             });
+
+            addStandaloneComment(instance, "This is a standalone comment.", "Admin");
+
             
   
             // Example: Log all current annotations
@@ -186,7 +189,7 @@ const addAnnotation = (instance, pageIndex, content) => {
       height: 50, // Height of the annotation box
     }),
     text: {
-      format: "plain", // Text format (can be "plain" or "html")
+      format: "xhtml", // Text format (can be "plain" or "html")
       value: content,   // The content of the annotation
     },
     color: PSPDFKit.Color.fromHex("#FF0000"), // Red text color
@@ -203,5 +206,25 @@ const addAnnotation = (instance, pageIndex, content) => {
     });
 };
 
+const addStandaloneComment = (instance, content, authorName) => {
+  const commentData = new PSPDFKit.Comments.Comment({
+    id: PSPDFKit.generateInstantId(), // Generate a unique ID for the comment
+    content: content,                 // The content of the comment
+    authorName: authorName,           // The name of the comment creator
+    createdAt: new Date().toISOString(), // Timestamp for creation
+    updatedAt: new Date().toISOString(), // Timestamp for last update
+  });
+
+  instance
+    .create(commentData)
+    .then(() => {
+      console.log("Standalone comment added successfully!");
+    })
+    .catch((error) => {
+      console.error("Failed to add standalone comment:", error);
+    });
+};
+
+// Example Usage
 
 
