@@ -219,25 +219,26 @@ const addAnnotation = (instance, pageIndex, content) => {
     });
 };
 
-function createComment(instance, id){
+const createComment = async (instance, id) => {
+  try {
     const newComment = new PSPDFKit.Comment({
       pageIndex: 0, // The page index where the comment will be created
-      text: new PSPDFKit.Text({
+      text: {
         format: "plain",
         value: "This is a new comment.",
-      }),
+      },
       creatorName: "Admin", // Optional: Set the creator's name
     });
 
     // Add the new comment using the appropriate PSPDFKit method
-    instance.create(newComment)
-      .then(() => {
-        console.log("Comment added successfully!");
-      })
-      .catch((error) => {
-        console.error("Failed to add comment:", error);
-      });
-    }
+    await instance.create(newComment);
+
+    console.log("Comment added successfully!");
+  } catch (error) {
+    console.error("Error adding comment:", error);
+  }
+};
+  
 
 
 setTimeout(()=>{
