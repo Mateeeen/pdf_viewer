@@ -219,8 +219,9 @@ const addAnnotation = (instance, pageIndex, content) => {
     });
 };
 
-const createComment = async (instance, id) => {
+function createComment(instance, id){
   try {
+    console.log(instance)
     if (!instance || typeof instance.get !== "function") {
       throw new Error("Invalid PSPDFKit instance");
     }
