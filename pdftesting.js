@@ -222,9 +222,6 @@ const addAnnotation = (instance, pageIndex, content) => {
 function createComment(instance, id){
   try {
     console.log(instance)
-    if (!instance || typeof instance.get !== "function") {
-      throw new Error("Invalid PSPDFKit instance");
-    }
     const comment = new PSPDFKit.Comment({
       id: PSPDFKit.generateInstantId(), // Generate a unique ID for the comment
       text: "<p>This is a new comment</p>", // Comment text in XHTML or plain text
