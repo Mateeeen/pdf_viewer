@@ -224,7 +224,7 @@ const loadPdfWithPage = (currentPage) => {
                       format: "plain",
                       value: "This is an automatically added comment"
                     },
-                    parentAnnotation: textMarkupAnnotation.id
+                    rootId: textMarkupAnnotation.id // Use the ID of the parent annotation as the rootId
                   });
                   
                   // Add the comment to the document
