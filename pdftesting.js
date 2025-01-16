@@ -202,7 +202,34 @@ const loadPdfWithPage = (currentPage) => {
             // }
 
 
-              // setTimeout(()=>{
+              setTimeout(()=>{
+
+                const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
+                  pageIndex: 0, // Replace with the actual page number
+                  rects: PSPDFKit.Immutable.List([
+                    new PSPDFKit.Geometry.Rect({
+                      left: 100,
+                      top: 100,
+                      width: 200,
+                      height: 20
+                    })
+                  ]),
+                  color: new PSPDFKit.Color({ r: 255, g: 255, b: 0 }), // Yellow color
+                  opacity: 0.5
+                });
+
+                // Add the highlight to the document
+                instance.create(highlightAnnotation).then(() => {
+                  // Now create a comment associated with this highlight
+                  const comment = new PSPDFKit.Annotations.CommentAnnotation({
+                    pageIndex: highlightAnnotation.pageIndex,
+                    parentId: highlightAnnotation.id,
+                    text: "Your comment text here"
+                  });
+
+                  // Add the comment to the document
+                  instance.create(comment);
+                });
               //   let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
               //   console.log(commentInfo)
               //   let annotation;
@@ -226,7 +253,7 @@ const loadPdfWithPage = (currentPage) => {
               //   instance.create(annotation);
               //   instance.create(commentAnnotation);
               //   console.log("created")
-              // },4000)
+              },4000)
 
             // setInterval(() => {
             //   instance.getComments().then(function (comments) {
