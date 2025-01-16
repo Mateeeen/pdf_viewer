@@ -195,7 +195,7 @@ const loadPdfWithPage = (currentPage) => {
                   id: commentInfo.rootId
                 });
 
-                const commentAnnotation = new PSPDFKit.Annotations.CommentAnnotation({
+                const commentAnnotation = new PSPDFKit.Annotations.CommentMarkerAnnotation({
                   pageIndex: commentInfo.pageIndex,
                   text: commentInfo.text,
                   creatorName: commentInfo.creatorName,
