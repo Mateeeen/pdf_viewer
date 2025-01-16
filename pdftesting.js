@@ -205,22 +205,7 @@ const loadPdfWithPage = (currentPage) => {
                 async function addAnnotations(instance) {
                   try {
                     let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
-                    // Get the current text selection
-                    // const textSelection = instance.getTextSelection();
-                    // console.log(textSelection)
                     
-                    // if (!textSelection) {
-                    //   console.log("No text selected");
-                    //   return;
-                    // }
-              
-                    // Get the selected text lines
-                    // const textLines = await textSelection.getSelectedTextLines();
-                    
-                    // if (textLines.length === 0) {
-                    //   console.log("No text lines selected");
-                    //   return;
-                    // }
                     // comment
               
                     // Create rects from the text lines
