@@ -198,7 +198,9 @@ const loadPdfWithPage = (currentPage) => {
                 annotation = new PSPDFKit.Annotations.HighlightAnnotation({
                   pageIndex: commentInfo.pageIndex,
                   rects: PSPDFKit.Immutable.List([new PSPDFKit.Geometry.Rect(commentInfo.position)]),
-                  id: commentInfo.rootId
+                  color: new PSPDFKit.Color({ r: 255, g: 255, b: 0 }), // Yellow color
+                  opacity: 0.5, // 50% opacity
+                  id: commentInfo.rootId,
                 });
 
                 const commentAnnotation = new PSPDFKit.Annotations.CommentMarkerAnnotation({
