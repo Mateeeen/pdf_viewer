@@ -186,7 +186,7 @@ const loadPdfWithPage = (currentPage) => {
             
               // Now you have all the necessary information, you can send it to your server
               console.log(commentInfo);
-
+              commentInfo.rootId = commentInfo + '1'
               setTimeout(()=>{
                 let annotation;
                 annotation = new PSPDFKit.Annotations.HighlightAnnotation({
