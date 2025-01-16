@@ -178,7 +178,7 @@ const loadPdfWithPage = (currentPage) => {
                 commentInfo.createdAt = comment.createdAt;
               }
             
-              if (annotation instanceof PSPDFKit.Annotations.TextMarkupAnnotation) {
+              if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
                 commentInfo.position = annotation.rects;
               } else if (annotation instanceof PSPDFKit.Annotations.NoteAnnotation) {
                 commentInfo.position = annotation.center;
