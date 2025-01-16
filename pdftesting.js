@@ -188,6 +188,7 @@ const loadPdfWithPage = (currentPage) => {
               console.log(commentInfo);
 
               setTimeout(()=>{
+                let annotation;
                 annotation = new PSPDFKit.Annotations.HighlightAnnotation({
                   pageIndex: commentInfo.pageIndex,
                   boundingBox: commentInfo.position,
