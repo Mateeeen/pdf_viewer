@@ -208,7 +208,7 @@ const loadPdfWithPage = (currentPage) => {
                   const rects = PSPDFKit.Immutable.List([
                     new PSPDFKit.Geometry.Rect({ left: 100, top: 100, width: 200, height: 20 })
                   ]);
-                  const textMarkupAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
+                  const textMarkupAnnotation = new PSPDFKit.Annotations.CommentMarkerAnnotation({
                       pageIndex: 0, // The page where you want to add the annotation
                       rects: rects, // Adjust these values to match the text you want to highlight
                       boundingBox: PSPDFKit.Geometry.Rect.union(rects)
@@ -216,7 +216,7 @@ const loadPdfWithPage = (currentPage) => {
               
                   // Add the text markup annotation to the document
                   const createdAnnotation = await instance.create(textMarkupAnnotation);
-                  console.log(createdAnnotation)
+                  console.log(createdAnnotation.id)
                   // Create a comment associated with the text markup annotation
                   const comment = new PSPDFKit.Comment({
                     pageIndex: 0,
