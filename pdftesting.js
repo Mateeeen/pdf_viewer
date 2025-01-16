@@ -205,30 +205,44 @@ const loadPdfWithPage = (currentPage) => {
               setTimeout(()=>{
 
                 async function addAnnotations(instance) {
+                  try{
                   const rects = PSPDFKit.Immutable.List([
                     new PSPDFKit.Geometry.Rect({ left: 100, top: 100, width: 200, height: 20 })
                   ]);
-                  const textMarkupAnnotation = new PSPDFKit.Annotations.CommentMarkerAnnotation({
-                      pageIndex: 0, // The page where you want to add the annotation
-                      rects: rects, // Adjust these values to match the text you want to highlight
-                      boundingBox: PSPDFKit.Geometry.Rect.union(rects)
-                    });
-              
-                  // Add the text markup annotation to the document
-                  const createdAnnotation = await instance.create(textMarkupAnnotation);
-                  console.log(createdAnnotation.id)
-                  // Create a comment associated with the text markup annotation
-                  const comment = new PSPDFKit.Comment({
+                  const commentMarker = new PSPDFKit.Annotations.CommentMarkerAnnotation({
                     pageIndex: 0,
-                    text: {
-                      format: "plain",
-                      value: "This is an automatically added comment"
-                    },
-                    rootId: createdAnnotation.id // Use the ID of the parent annotation as the rootId
+                    boundingBox: new PSPDFKit.Geometry.Rect({
+                      left: 100,
+                      top: 100,
+                      width: 24,
+                      height: 24
+                    })
                   });
-                  
+            
+                  // Add the comment marker to the document and get the created annotation
+                  const createdAnnotations = await instance.create([commentMarker]);
+                  const createdMarker = createdAnnotations[0];
+            
+                  if (!createdMarker || !createdMarker.id) {
+                    throw new Error("Failed to create comment marker annotation");
+                  }
+            
+                  console.log("Created marker ID:", createdMarker.id);
+            
+                  // Now create the comment using the ID of the created marker
+                  const comment = new PSPDFKit.Comment({
+                    text: "This is an automatically added comment",
+                    pageIndex: 0,
+                    rootId: createdMarker.id
+                  });
+            
                   // Add the comment to the document
                   await instance.create(comment);
+            
+                  console.log("Comment created successfully");
+                } catch (error) {
+                  console.error("Error creating annotation and comment:", error);
+                }
               }
               //   let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
               //   console.log(commentInfo)
