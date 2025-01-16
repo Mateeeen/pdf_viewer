@@ -146,7 +146,7 @@ const loadPdfWithPage = (currentPage) => {
 
             instance.addEventListener("annotations.create", (annotations) => {
               annotations.forEach(annotation => {
-                if (annotation instanceof PSPDFKit.Annotations.CommentAnnotation) {
+                if (annotation instanceof PSPDFKit.Annotations.NoteAnnotation) {
                   // This is a new comment
                   saveCommentInfo(annotation);
                 }
