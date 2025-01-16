@@ -147,7 +147,7 @@ const loadPdfWithPage = (currentPage) => {
             instance.addEventListener("annotations.create", (annotations) => {
               annotations.forEach(annotation => {
                   // This is a new comment
-                  saveCommentInfo(annotation);
+                  saveCommentInfo(annotation, instance);
                 
               });
             });
@@ -284,7 +284,7 @@ setTimeout(()=>{
 },10000)
 
 
-function saveCommentInfo(annotation) {
+function saveCommentInfo(annotation, instance) {
   instance.getComments().then(comments => {
     const comment = comments.find(c => c.id === annotation.id);
     if (comment) {
