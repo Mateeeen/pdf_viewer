@@ -147,11 +147,14 @@ const loadPdfWithPage = (currentPage) => {
             setInterval(() => {
               instance.getComments().then(function (comments) {
                 comments.forEach(comment => {
-                  instance.getAnnotation(comment.rootId).then(annotation => {
-                    if (annotation.type === 'pspdfkit/markup/highlight') {
-                      console.log(`Highlight position: ${annotation.boundingBox}`);
-                    } else if (annotation.type === 'pspdfkit/comment-marker') {
-                      console.log(`Comment marker position: ${annotation.center}`);
+                  instance.getAnnotations(comment.pageIndex).then(annotations => {
+                    const associatedAnnotation = annotations.find(annotation => annotation.id === comment.rootId);
+                    if (associatedAnnotation) {
+                      if (associatedAnnotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
+                        console.log(`Highlight position: ${JSON.stringify(associatedAnnotation.boundingBox)}`);
+                      } else if (associatedAnnotation instanceof PSPDFKit.Annotations.NoteAnnotation) {
+                        console.log(`Note position: ${JSON.stringify(associatedAnnotation.center)}`);
+                      }
                     }
                   });
                 });
