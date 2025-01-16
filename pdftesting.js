@@ -205,12 +205,11 @@ const loadPdfWithPage = (currentPage) => {
                 async function addAnnotations(instance) {
                   try {
                     let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
-                    
+
                     const rects = PSPDFKit.Immutable.List(
                       [new PSPDFKit.Geometry.Rect(commentInfo.rects[0])]
                     );
               
-                    // Create a highlight annotation
                     const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
                       pageIndex: commentInfo.pageIndex,
                       rects: rects,
