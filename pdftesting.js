@@ -221,6 +221,7 @@ const loadPdfWithPage = (currentPage) => {
                       console.log("No text lines selected");
                       return;
                     }
+                    // comment
               
                     // Create rects from the text lines
                     const rects = PSPDFKit.Immutable.List(
