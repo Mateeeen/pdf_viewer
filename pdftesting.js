@@ -197,30 +197,22 @@ const loadPdfWithPage = (currentPage) => {
                 let annotation;
                 annotation = new PSPDFKit.Annotations.HighlightAnnotation({
                   pageIndex: commentInfo.pageIndex,
-                  rects: PSPDFKit.Immutable.List([
-                    new PSPDFKit.Geometry.Rect({
-                      left: 100,
-                      top: 100,
-                      width: 200,
-                      height: 20
-                    })
-                  ]),
+                  rects: PSPDFKit.Immutable.List([new PSPDFKit.Geometry.Rect(commentInfo.position[0])]),
                   color: new PSPDFKit.Color({ r: 255, g: 255, b: 0 }), // Yellow color
                   opacity: 0.5, // 50% opacity
                   id: commentInfo.rootId,
                   text: commentInfo.text,
                 });
 
-                // const commentAnnotation = new PSPDFKit.Annotations.CommentMarkerAnnotation({
-                //   pageIndex: commentInfo.pageIndex,
-                //   text: commentInfo.text,
-                //   rects: PSPDFKit.Immutable.List([new PSPDFKit.Geometry.Rect(commentInfo.position)]),
-                //   creatorName: commentInfo.creatorName,
-                //   createdAt: new Date(commentInfo.createdAt),
-                //   id: commentInfo.id
-                // });
+                const commentAnnotation = new PSPDFKit.Annotations.CommentMarkerAnnotation({
+                  pageIndex: commentInfo.pageIndex,
+                  text: commentInfo.text,
+                  creatorName: commentInfo.creatorName,
+                  createdAt: new Date(commentInfo.createdAt),
+                  id: commentInfo.id
+                });
                 instance.create(annotation);
-                // instance.create(commentAnnotation);
+                instance.create(commentAnnotation);
                 console.log("created")
               },4000)
 
