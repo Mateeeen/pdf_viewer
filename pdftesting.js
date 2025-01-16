@@ -313,6 +313,9 @@ function saveCommentInfo(annotation, instance) {
         console.log(commentInfo);
       });
     }
+    else{
+      console.log("no comments")
+    }
   });
 }
 
