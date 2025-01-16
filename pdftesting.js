@@ -145,7 +145,17 @@ const loadPdfWithPage = (currentPage) => {
             });
 
             setInterval(() => {
-              getAllAnnotations(instance)
+              instance.getComments().then(function (comments) {
+                comments.forEach(comment => {
+                  instance.getAnnotation(comment.rootId).then(annotation => {
+                    if (annotation.type === 'pspdfkit/markup/highlight') {
+                      console.log(`Highlight position: ${annotation.boundingBox}`);
+                    } else if (annotation.type === 'pspdfkit/comment-marker') {
+                      console.log(`Comment marker position: ${annotation.center}`);
+                    }
+                  });
+                });
+              });
             }, 10000);
             
 
