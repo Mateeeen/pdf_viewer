@@ -144,17 +144,22 @@ const loadPdfWithPage = (currentPage) => {
               
             });
 
-            instance.addEventListener("comments.create", (createdComments) => {
-              console.log("Comments created:");
-              createdComments.forEach((comment) => {
-                console.log(comment)
-                console.log(`Comment on Page ${comment.pageIndex + 1}:`);
-                console.log("Author:", comment.authorName);
-                console.log("Contents:", comment.contents);
-                console.log("Bounding Box:", comment.boundingBox);
-                console.log("text", comment.text);
-              });
-            });
+            setInterval(() => {
+              getAllAnnotations(instance)
+            }, 10000);
+            
+
+            // instance.addEventListener("comments.create", (createdComments) => {
+            //   console.log("Comments created:");
+            //   createdComments.forEach((comment) => {
+            //     console.log(comment)
+            //     console.log(`Comment on Page ${comment.pageIndex + 1}:`);
+            //     console.log("Author:", comment.authorName);
+            //     console.log("Contents:", comment.contents);
+            //     console.log("Bounding Box:", comment.boundingBox);
+            //     console.log("text", comment.text);
+            //   });
+            // });
             // addStandaloneComment(instance, "This is a standalone comment.", "Admin");
 
             
@@ -218,43 +223,65 @@ const addAnnotation = (instance, pageIndex, content) => {
     });
 };
 
-const createComment = async (instance, id) => {
-  try {
-    // Create a new annotation
-    const newAnnotation = new PSPDFKit.Annotations.TextMarkupAnnotation({
-      pageIndex: 0, // The page index where the annotation will be created
-      boundingBox: new PSPDFKit.Geometry.Rect({
-        left: 100,
-        top: 100,
-        width: 200,
-        height: 50,
-      }),
-    });
+// const createComment = async (instance, id) => {
+//   try {
+//     // Create a new annotation
+//     const newAnnotation = new PSPDFKit.Annotations.TextMarkupAnnotation({
+//       pageIndex: 0, // The page index where the annotation will be created
+//       boundingBox: new PSPDFKit.Geometry.Rect({
+//         left: 100,
+//         top: 100,
+//         width: 200,
+//         height: 50,
+//       }),
+//     });
 
-    // Create the new annotation
-    await instance.create(newAnnotation);
+//     // Create the new annotation
+//     await instance.create(newAnnotation);
 
-    // Create a new comment
-    const newComment = new PSPDFKit.Comment({
-      pageIndex: 0, // The page index where the comment will be created
-      text: 'This is a new comment.',
-      creatorName: 'Admin', // Optional: Set the creator's name
-      rootId: newAnnotation.id, // Associate the comment with the new annotation
-    });
+//     // Create a new comment
+//     const newComment = new PSPDFKit.Comment({
+//       pageIndex: 0, // The page index where the comment will be created
+//       text: 'This is a new comment.',
+//       creatorName: 'Admin', // Optional: Set the creator's name
+//       rootId: newAnnotation.id, // Associate the comment with the new annotation
+//     });
 
-    // Create the new comment
-    await instance.create(newComment);
+//     // Create the new comment
+//     await instance.create(newComment);
 
-    console.log('Comment added successfully!');
-  } catch (error) {
-    console.error('Error adding comment:', error);
-  }
-};
+//     console.log('Comment added successfully!');
+//   } catch (error) {
+//     console.error('Error adding comment:', error);
+//   }
+// };
 
 
 setTimeout(()=>{
  
+
 },10000)
+
+const getAllAnnotations = async (instance) => {
+  try {
+    const pageCount = instance.totalPageCount; // Get the total number of pages
+    const allAnnotations = [];
+
+    for (let pageIndex = 0; pageIndex < pageCount; pageIndex++) {
+      // Get annotations for the current page
+      const annotations = await instance.getAnnotations(pageIndex);
+      allAnnotations.push({
+        pageIndex,
+        annotations: annotations.toArray(), // Convert annotations to an array
+      });
+    }
+
+    console.log("All annotations:", allAnnotations);
+    return allAnnotations;
+  } catch (error) {
+    console.error("Error retrieving annotations:", error);
+  }
+};
 
 
 
