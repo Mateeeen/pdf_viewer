@@ -186,6 +186,21 @@ const loadPdfWithPage = (currentPage) => {
             
               // Now you have all the necessary information, you can send it to your server
               console.log(commentInfo);
+
+              setTimeout(()=>{
+                annotation = new PSPDFKit.Annotations.HighlightAnnotation({
+                  pageIndex: commentInfo.pageIndex,
+                  boundingBox: commentInfo.position,
+                  id: commentInfo.rootId
+                });
+
+                instance.createComment(commentInfo.rootId, {
+                  text: commentInfo.text,
+                  creatorName: commentInfo.creatorName,
+                  createdAt: new Date(commentInfo.createdAt),
+                  id: commentInfo.id
+                });
+              },2000)
             }
 
             // setInterval(() => {
