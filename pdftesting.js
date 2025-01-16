@@ -161,8 +161,6 @@ const loadPdfWithPage = (currentPage) => {
             
             function saveCommentWithHighlight(highlight, comment) {
               const commentInfo = {
-                highlightId: highlight.id,
-                commentId: comment.id,
                 pageIndex: highlight.pageIndex,
                 rects: highlight.rects.toJS(),
                 text: comment.text,
@@ -202,83 +200,84 @@ const loadPdfWithPage = (currentPage) => {
             // }
 
 
-              // setTimeout(()=>{
+              setTimeout(()=>{
 
-              //   async function addAnnotations(instance) {
-              //     try {
-              //       // Get the current text selection
-              //       const textSelection = instance.getTextSelection();
+                async function addAnnotations(instance) {
+                  try {
+                    // Get the current text selection
+                    const textSelection = instance.getTextSelection();
+                    console.log(textSelection)
                     
-              //       if (!textSelection) {
-              //         console.log("No text selected");
-              //         return;
-              //       }
+                    if (!textSelection) {
+                      console.log("No text selected");
+                      return;
+                    }
               
-              //       // Get the selected text lines
-              //       const textLines = await textSelection.getSelectedTextLines();
+                    // Get the selected text lines
+                    const textLines = await textSelection.getSelectedTextLines();
                     
-              //       if (textLines.length === 0) {
-              //         console.log("No text lines selected");
-              //         return;
-              //       }
-              //       // comment
+                    if (textLines.length === 0) {
+                      console.log("No text lines selected");
+                      return;
+                    }
+                    // comment
               
-              //       // Create rects from the text lines
-              //       const rects = PSPDFKit.Immutable.List(
-              //         textLines.map(line => line.boundingBox)
-              //       );
+                    // Create rects from the text lines
+                    const rects = PSPDFKit.Immutable.List(
+                      textLines.map(line => line.boundingBox)
+                    );
               
-              //       // Create a highlight annotation
-              //       const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
-              //         pageIndex: 0,
-              //         rects: rects,
-              //         boundingBox: PSPDFKit.Geometry.Rect.union(rects)
-              //       });
+                    // Create a highlight annotation
+                    const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
+                      pageIndex: 0,
+                      rects: rects,
+                      boundingBox: PSPDFKit.Geometry.Rect.union(rects)
+                    });
               
-              //       // Add the highlight annotation to the document
-              //       let createdHighlight = await instance.create([highlightAnnotation]);
-              //       createdHighlight = createdHighlight[0]
+                    // Add the highlight annotation to the document
+                    let createdHighlight = await instance.create([highlightAnnotation]);
+                    createdHighlight = createdHighlight[0]
                             
-              //       // Now create the comment using the ID of the created highlight
-              //       const comment = new PSPDFKit.Comment({
-              //         text: { format: 'plain', value: 'This is an automatically added comment' },
-              //         pageIndex: createdHighlight.pageIndex,
-              //         rootId: createdHighlight.id
-              //       });
+                    // Now create the comment using the ID of the created highlight
+                    const comment = new PSPDFKit.Comment({
+                      text: { format: 'plain', value: 'This is an automatically added comment' },
+                      pageIndex: createdHighlight.pageIndex,
+                      rootId: createdHighlight.id
+                    });
               
-              //       // Add the comment to the document
-              //       await instance.create(comment);
+                    // Add the comment to the document
+                    await instance.create(comment);
               
-              //       console.log("Highlight and comment created successfully");
-              //     } catch (error) {
-              //       console.error("Error creating highlight and comment:", error);
-              //     }
-              // }
-              // //   let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
-              // //   console.log(commentInfo)
-              // //   let annotation;
-              // //   annotation = new PSPDFKit.Annotations.HighlightAnnotation({
-              // //     pageIndex: commentInfo.pageIndex,
-              // //     rects: PSPDFKit.Immutable.List([new PSPDFKit.Geometry.Rect(commentInfo.position[0])]),
-              // //     color: new PSPDFKit.Color({ r: 255, g: 255, b: 0 }), // Yellow color
-              // //     opacity: 0.5, // 50% opacity
-              // //     id: commentInfo.rootId,
-              // //     text: commentInfo.text,
-              // //   });
+                    console.log("Highlight and comment created successfully");
+                  } catch (error) {
+                    console.error("Error creating highlight and comment:", error);
+                  }
+              }
+              //   let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
+              //   console.log(commentInfo)
+              //   let annotation;
+              //   annotation = new PSPDFKit.Annotations.HighlightAnnotation({
+              //     pageIndex: commentInfo.pageIndex,
+              //     rects: PSPDFKit.Immutable.List([new PSPDFKit.Geometry.Rect(commentInfo.position[0])]),
+              //     color: new PSPDFKit.Color({ r: 255, g: 255, b: 0 }), // Yellow color
+              //     opacity: 0.5, // 50% opacity
+              //     id: commentInfo.rootId,
+              //     text: commentInfo.text,
+              //   });
 
-              // //   const commentAnnotation = new PSPDFKit.Annotations.CommentMarkerAnnotation({
-              // //     pageIndex: commentInfo.pageIndex,
-              // //     text: commentInfo.text,
-              // //     color: new PSPDFKit.Color({ r: 255, g: 255, b: 0 }), // Yellow color
-              // //     creatorName: commentInfo.creatorName,
-              // //     createdAt: new Date(commentInfo.createdAt),
-              // //     id: commentInfo.id
-              // //   });
-              // //   instance.create(annotation);
-              // //   instance.create(commentAnnotation);
-              // //   console.log("created")
-              // addAnnotations(instance)
-              // },10000)
+              //   const commentAnnotation = new PSPDFKit.Annotations.CommentMarkerAnnotation({
+              //     pageIndex: commentInfo.pageIndex,
+              //     text: commentInfo.text,
+              //     color: new PSPDFKit.Color({ r: 255, g: 255, b: 0 }), // Yellow color
+              //     creatorName: commentInfo.creatorName,
+              //     createdAt: new Date(commentInfo.createdAt),
+              //     id: commentInfo.id
+              //   });
+              //   instance.create(annotation);
+              //   instance.create(commentAnnotation);
+              //   console.log("created")
+              addAnnotations(instance)
+              },10000)
 
             // setInterval(() => {
             //   instance.getComments().then(function (comments) {
