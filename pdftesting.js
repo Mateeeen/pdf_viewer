@@ -188,7 +188,7 @@ const loadPdfWithPage = (currentPage) => {
               commentInfo.id = commentInfo.id
               console.log(commentInfo);
 
-              localStorage.setItem("commentInfo",commentInfo)
+              localStorage.setItem("commentInfo",JSON.stringify(commentInfo))
 
               setTimeout(()=>{
                 let annotation;
