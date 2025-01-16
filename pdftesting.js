@@ -205,12 +205,14 @@ const loadPdfWithPage = (currentPage) => {
               setTimeout(()=>{
 
                 async function addAnnotations(instance) {
-              
+                  const rects = PSPDFKit.Immutable.List([
+                    new PSPDFKit.Geometry.Rect({ left: 100, top: 100, width: 200, height: 20 })
+                  ]);
                   const textMarkupAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
                       pageIndex: 0, // The page where you want to add the annotation
-                      rects: [new PSPDFKit.Geometry.Rect({ left: 100, top: 100, width: 200, height: 20 })], // Adjust these values to match the text you want to highlight
-                      boundingBox: new PSPDFKit.Geometry.Rect({ left: 100, top: 100, width: 200, height: 20 }), // Should match the rects
-                  });
+                      rects: rects, // Adjust these values to match the text you want to highlight
+                      boundingBox: PSPDFKit.Geometry.Rect.union(rects)
+                    });
               
                   // Add the text markup annotation to the document
                   await instance.create(textMarkupAnnotation);
