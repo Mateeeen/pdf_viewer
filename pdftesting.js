@@ -147,75 +147,86 @@ const loadPdfWithPage = (currentPage) => {
             instance.addEventListener("annotations.create", (annotations) => {
               annotations.forEach(annotation => {
                 if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
-                  console.log("highlighted")
-                  // This is a new text markup annotation (e.g., highlight)
+                  // This is the highlight created when text is selected
                   instance.getComments(annotation.id).then(comments => {
                     if (comments.size > 0) {
-                      // If there are comments associated with this annotation, it's a new comment on selected text
-                      saveCommentInfo(annotation, comments.get(0));
-                    }
-                    else{
-                      console.log("nothing")
+                      // If there are comments associated with this highlight, it's a new comment on selected text
+                      const comment = comments.get(0);
+                      saveCommentWithHighlight(annotation, comment);
                     }
                   });
-                } else if (annotation instanceof PSPDFKit.Annotations.NoteAnnotation) {
-                  // This is a standalone comment (not on selected text)
-                  saveCommentInfo(annotation);
                 }
               });
             });
             
-            function saveCommentInfo(annotation, comment = null) {
+            function saveCommentWithHighlight(highlight, comment) {
               const commentInfo = {
-                id: annotation.id,
-                pageIndex: annotation.pageIndex,
-                type: annotation.type
+                highlightId: highlight.id,
+                commentId: comment.id,
+                pageIndex: highlight.pageIndex,
+                rects: highlight.rects.toJS(),
+                text: comment.text,
+                creatorName: comment.creatorName,
+                createdAt: comment.createdAt
               };
-            
-              if (comment) {
-                commentInfo.commentId = comment.id;
-                commentInfo.text = comment.text;
-                commentInfo.creatorName = comment.creatorName;
-                commentInfo.createdAt = comment.createdAt;
-              }
-            
-              if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
-                commentInfo.position = annotation.rects;
-                console.log("Highlight")
-              } else if (annotation instanceof PSPDFKit.Annotations.NoteAnnotation) {
-                commentInfo.position = annotation.center;
-              }
-            
-              // Now you have all the necessary information, you can send it to your server
-              console.log(commentInfo);
+              localStorage.setItem("commentInfo",commentInfo)
+              console.log(commentInfo)
+              // Now you have the highlight and comment information, you can send it to your server
             }
+            
+            
+            
+            // function saveCommentInfo(annotation, comment = null) {
+            //   const commentInfo = {
+            //     id: annotation.id,
+            //     pageIndex: annotation.pageIndex,
+            //     type: annotation.type
+            //   };
+            
+            //   if (comment) {
+            //     commentInfo.commentId = comment.id;
+            //     commentInfo.text = comment.text;
+            //     commentInfo.creatorName = comment.creatorName;
+            //     commentInfo.createdAt = comment.createdAt;
+            //   }
+            
+            //   if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
+            //     commentInfo.position = annotation.rects;
+            //     console.log("Highlight")
+            //   } else if (annotation instanceof PSPDFKit.Annotations.NoteAnnotation) {
+            //     commentInfo.position = annotation.center;
+            //   }
+            
+            //   // Now you have all the necessary information, you can send it to your server
+            //   console.log(commentInfo);
+            // }
 
 
-              setTimeout(()=>{
-                let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
-                console.log(commentInfo)
-                let annotation;
-                annotation = new PSPDFKit.Annotations.HighlightAnnotation({
-                  pageIndex: commentInfo.pageIndex,
-                  rects: PSPDFKit.Immutable.List([new PSPDFKit.Geometry.Rect(commentInfo.position[0])]),
-                  color: new PSPDFKit.Color({ r: 255, g: 255, b: 0 }), // Yellow color
-                  opacity: 0.5, // 50% opacity
-                  id: commentInfo.rootId,
-                  text: commentInfo.text,
-                });
+              // setTimeout(()=>{
+              //   let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
+              //   console.log(commentInfo)
+              //   let annotation;
+              //   annotation = new PSPDFKit.Annotations.HighlightAnnotation({
+              //     pageIndex: commentInfo.pageIndex,
+              //     rects: PSPDFKit.Immutable.List([new PSPDFKit.Geometry.Rect(commentInfo.position[0])]),
+              //     color: new PSPDFKit.Color({ r: 255, g: 255, b: 0 }), // Yellow color
+              //     opacity: 0.5, // 50% opacity
+              //     id: commentInfo.rootId,
+              //     text: commentInfo.text,
+              //   });
 
-                const commentAnnotation = new PSPDFKit.Annotations.CommentMarkerAnnotation({
-                  pageIndex: commentInfo.pageIndex,
-                  text: commentInfo.text,
-                  color: new PSPDFKit.Color({ r: 255, g: 255, b: 0 }), // Yellow color
-                  creatorName: commentInfo.creatorName,
-                  createdAt: new Date(commentInfo.createdAt),
-                  id: commentInfo.id
-                });
-                instance.create(annotation);
-                instance.create(commentAnnotation);
-                console.log("created")
-              },4000)
+              //   const commentAnnotation = new PSPDFKit.Annotations.CommentMarkerAnnotation({
+              //     pageIndex: commentInfo.pageIndex,
+              //     text: commentInfo.text,
+              //     color: new PSPDFKit.Color({ r: 255, g: 255, b: 0 }), // Yellow color
+              //     creatorName: commentInfo.creatorName,
+              //     createdAt: new Date(commentInfo.createdAt),
+              //     id: commentInfo.id
+              //   });
+              //   instance.create(annotation);
+              //   instance.create(commentAnnotation);
+              //   console.log("created")
+              // },4000)
 
             // setInterval(() => {
             //   instance.getComments().then(function (comments) {
