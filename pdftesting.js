@@ -205,45 +205,37 @@ const loadPdfWithPage = (currentPage) => {
               setTimeout(()=>{
 
                 async function addAnnotations(instance) {
-                  try{
-                  const rects = PSPDFKit.Immutable.List([
-                    new PSPDFKit.Geometry.Rect({ left: 100, top: 100, width: 200, height: 20 })
-                  ]);
-                  const commentMarker = new PSPDFKit.Annotations.CommentMarkerAnnotation({
-                    pageIndex: 0,
-                    boundingBox: new PSPDFKit.Geometry.Rect({
-                      left: 100,
-                      top: 100,
-                      width: 24,
-                      height: 24
-                    }),
-                    color: new PSPDFKit.Color({ r: 255, g: 255, b: 0 }), // Yellow color
-                  });
-            
-                  // Add the comment marker to the document and get the created annotation
-                  const createdAnnotations = await instance.create([commentMarker]);
-                  const createdMarker = createdAnnotations[0];
-            
-                  if (!createdMarker || !createdMarker.id) {
-                    throw new Error("Failed to create comment marker annotation");
+                  try {
+                    // Get the current text selection
+                    const textSelection = await instance.getTextSelection();
+                    
+                    if (!textSelection) {
+                      console.log("No text selected");
+                      return;
+                    }
+              
+                    // Create a highlight annotation from the text selection
+                    const highlightAnnotation = await instance.createAnnotationFromTextSelection(
+                      PSPDFKit.Annotations.HighlightAnnotation,
+                      textSelection
+                    );
+              
+                    console.log("Created highlight annotation ID:", highlightAnnotation.id);
+              
+                    // Now create the comment using the ID of the created highlight
+                    const comment = new PSPDFKit.Comment({
+                      text: "This is an automatically added comment",
+                      pageIndex: highlightAnnotation.pageIndex,
+                      rootId: highlightAnnotation.id
+                    });
+              
+                    // Add the comment to the document
+                    await instance.create(comment);
+              
+                    console.log("Highlight and comment created successfully");
+                  } catch (error) {
+                    console.error("Error creating highlight and comment:", error);
                   }
-            
-                  console.log("Created marker ID:", createdMarker.id);
-            
-                  // Now create the comment using the ID of the created marker
-                  const comment = new PSPDFKit.Comment({
-                    text: { format: 'plain', value: 'This is an automatically added comment' },
-                    pageIndex: 0,
-                    rootId: createdMarker.id
-                  });
-            
-                  // Add the comment to the document
-                  await instance.create(comment);
-            
-                  console.log("Comment created successfully");
-                } catch (error) {
-                  console.error("Error creating annotation and comment:", error);
-                }
               }
               //   let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
               //   console.log(commentInfo)
@@ -269,7 +261,7 @@ const loadPdfWithPage = (currentPage) => {
               //   instance.create(commentAnnotation);
               //   console.log("created")
               addAnnotations(instance)
-              },4000)
+              },10000)
 
             // setInterval(() => {
             //   instance.getComments().then(function (comments) {
