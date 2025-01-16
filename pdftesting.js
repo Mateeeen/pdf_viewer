@@ -146,7 +146,7 @@ const loadPdfWithPage = (currentPage) => {
 
             instance.addEventListener("annotations.create", (annotations) => {
               annotations.forEach(annotation => {
-                if (annotation instanceof PSPDFKit.Annotations.TextMarkupAnnotation) {
+                if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
                   // This is a new text markup annotation (e.g., highlight)
                   instance.getComments(annotation.id).then(comments => {
                     if (comments.size > 0) {
