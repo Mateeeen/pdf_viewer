@@ -204,32 +204,33 @@ const loadPdfWithPage = (currentPage) => {
 
                 async function addAnnotations(instance) {
                   try {
+                    let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
                     // Get the current text selection
-                    const textSelection = instance.getTextSelection();
-                    console.log(textSelection)
+                    // const textSelection = instance.getTextSelection();
+                    // console.log(textSelection)
                     
-                    if (!textSelection) {
-                      console.log("No text selected");
-                      return;
-                    }
+                    // if (!textSelection) {
+                    //   console.log("No text selected");
+                    //   return;
+                    // }
               
                     // Get the selected text lines
-                    const textLines = await textSelection.getSelectedTextLines();
+                    // const textLines = await textSelection.getSelectedTextLines();
                     
-                    if (textLines.length === 0) {
-                      console.log("No text lines selected");
-                      return;
-                    }
+                    // if (textLines.length === 0) {
+                    //   console.log("No text lines selected");
+                    //   return;
+                    // }
                     // comment
               
                     // Create rects from the text lines
                     const rects = PSPDFKit.Immutable.List(
-                      textLines.map(line => line.boundingBox)
+                      [new PSPDFKit.Geometry.Rect(commentInfo.rects[0])]
                     );
               
                     // Create a highlight annotation
                     const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
-                      pageIndex: 0,
+                      pageIndex: commentInfo.pageIndex,
                       rects: rects,
                       boundingBox: PSPDFKit.Geometry.Rect.union(rects)
                     });
@@ -240,7 +241,7 @@ const loadPdfWithPage = (currentPage) => {
                             
                     // Now create the comment using the ID of the created highlight
                     const comment = new PSPDFKit.Comment({
-                      text: { format: 'plain', value: 'This is an automatically added comment' },
+                      text: commentInfo.text,
                       pageIndex: createdHighlight.pageIndex,
                       rootId: createdHighlight.id
                     });
