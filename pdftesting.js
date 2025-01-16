@@ -193,6 +193,7 @@ const loadPdfWithPage = (currentPage) => {
 
               setTimeout(()=>{
                 let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
+                console.log(commentInfo)
                 let annotation;
                 annotation = new PSPDFKit.Annotations.HighlightAnnotation({
                   pageIndex: commentInfo.pageIndex,
