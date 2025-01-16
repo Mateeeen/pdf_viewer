@@ -231,7 +231,7 @@ const loadPdfWithPage = (currentPage) => {
             
                   // Now create the comment using the ID of the created marker
                   const comment = new PSPDFKit.Comment({
-                    text: "This is an automatically added comment",
+                    text: { format: 'plain', value: 'This is an automatically added comment' },
                     pageIndex: 0,
                     rootId: createdMarker.id
                   });
