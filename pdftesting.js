@@ -188,9 +188,12 @@ const loadPdfWithPage = (currentPage) => {
               commentInfo.id = commentInfo.id
               console.log(commentInfo);
 
-              localStorage.setItem("commentInfo",JSON.stringify(commentInfo))
+              
+            }
+
 
               setTimeout(()=>{
+                let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
                 let annotation;
                 annotation = new PSPDFKit.Annotations.HighlightAnnotation({
                   pageIndex: commentInfo.pageIndex,
@@ -207,7 +210,6 @@ const loadPdfWithPage = (currentPage) => {
                 });
                 instance.create(commentAnnotation);
               },2000)
-            }
 
             // setInterval(() => {
             //   instance.getComments().then(function (comments) {
