@@ -201,7 +201,7 @@ const loadPdfWithPage = (currentPage) => {
                   id: commentInfo.rootId
                 });
 
-                const commentAnnotation = new PSPDFKit.Annotations.CommentMarkerAnnotation({
+                const commentAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
                   pageIndex: commentInfo.pageIndex,
                   text: commentInfo.text,
                   creatorName: commentInfo.creatorName,
@@ -209,7 +209,8 @@ const loadPdfWithPage = (currentPage) => {
                   id: commentInfo.id
                 });
                 instance.create(commentAnnotation);
-              },2000)
+                console.log("created")
+              },4000)
 
             // setInterval(() => {
             //   instance.getComments().then(function (comments) {
