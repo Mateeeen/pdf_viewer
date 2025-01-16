@@ -207,6 +207,7 @@ const loadPdfWithPage = (currentPage) => {
                 const commentAnnotation = new PSPDFKit.Annotations.CommentMarkerAnnotation({
                   pageIndex: commentInfo.pageIndex,
                   text: commentInfo.text,
+                  color: new PSPDFKit.Color({ r: 255, g: 255, b: 0 }), // Yellow color
                   creatorName: commentInfo.creatorName,
                   createdAt: new Date(commentInfo.createdAt),
                   id: commentInfo.id
