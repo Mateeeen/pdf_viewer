@@ -206,9 +206,6 @@ const loadPdfWithPage = (currentPage) => {
                   try {
                     let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
                     
-                    // comment
-              
-                    // Create rects from the text lines
                     const rects = PSPDFKit.Immutable.List(
                       [new PSPDFKit.Geometry.Rect(commentInfo.rects[0])]
                     );
