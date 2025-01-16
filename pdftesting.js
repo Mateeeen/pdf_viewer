@@ -215,8 +215,8 @@ const loadPdfWithPage = (currentPage) => {
                     });
               
                   // Add the text markup annotation to the document
-                  await instance.create(textMarkupAnnotation);
-                    console.log(textMarkupAnnotation.id)
+                  const createdAnnotation = await instance.create(textMarkupAnnotation);
+                  console.log(createdAnnotation.id)
                   // Create a comment associated with the text markup annotation
                   const comment = new PSPDFKit.Comment({
                     pageIndex: 0,
@@ -224,7 +224,7 @@ const loadPdfWithPage = (currentPage) => {
                       format: "plain",
                       value: "This is an automatically added comment"
                     },
-                    rootId: textMarkupAnnotation.id // Use the ID of the parent annotation as the rootId
+                    rootId: createdAnnotation.id // Use the ID of the parent annotation as the rootId
                   });
                   
                   // Add the comment to the document
