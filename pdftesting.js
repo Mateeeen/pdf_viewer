@@ -221,14 +221,9 @@ const loadPdfWithPage = (currentPage) => {
                 // Add the highlight to the document
                 instance.create(highlightAnnotation).then(() => {
                   // Now create a comment associated with this highlight
-                  const comment = new PSPDFKit.Annotations.CommentAnnotation({
-                    pageIndex: highlightAnnotation.pageIndex,
-                    parentId: highlightAnnotation.id,
+                  instance.createComment(highlightAnnotation.id, {
                     text: "Your comment text here"
                   });
-
-                  // Add the comment to the document
-                  instance.create(comment);
                 });
               //   let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
               //   console.log(commentInfo)
