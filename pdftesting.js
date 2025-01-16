@@ -185,8 +185,10 @@ const loadPdfWithPage = (currentPage) => {
               }
             
               // Now you have all the necessary information, you can send it to your server
-              commentInfo.id = commentInfo.id + '1'
+              commentInfo.id = commentInfo.id
               console.log(commentInfo);
+
+              localStorage.setItem("commentInfo",commentInfo)
 
               setTimeout(()=>{
                 let annotation;
