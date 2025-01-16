@@ -216,7 +216,8 @@ const loadPdfWithPage = (currentPage) => {
                       top: 100,
                       width: 24,
                       height: 24
-                    })
+                    }),
+                    color: new PSPDFKit.Color({ r: 255, g: 255, b: 0 }), // Yellow color
                   });
             
                   // Add the comment marker to the document and get the created annotation
