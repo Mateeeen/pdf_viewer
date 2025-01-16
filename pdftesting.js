@@ -204,32 +204,27 @@ const loadPdfWithPage = (currentPage) => {
 
               setTimeout(()=>{
 
-                const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
-                  pageIndex: 0, // Replace with the actual page number
-                  rects: PSPDFKit.Immutable.List([
-                    new PSPDFKit.Geometry.Rect({
-                      left: 100,
-                      top: 100,
-                      width: 200,
-                      height: 20
-                    })
-                  ]),
-                  color: new PSPDFKit.Color({ r: 255, g: 255, b: 0 }), // Yellow color
-                  opacity: 0.5
-                });
-
-                // Add the highlight to the document
-                instance.create(highlightAnnotation).then(() => {
-                  // Now create a comment associated with this highlight
-                  const commentMarker = new PSPDFKit.Annotations.CommentMarkerAnnotation({
-                    pageIndex: highlightAnnotation.pageIndex,
-                    boundingBox: highlightAnnotation.boundingBox,
-                    text: "Your comment text here"
+                async function addAnnotations(instance) {
+              
+                  const textMarkupAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
+                      pageIndex: 0, // The page where you want to add the annotation
+                      rects: [new PSPDFKit.Geometry.Rect({ left: 100, top: 100, width: 200, height: 20 })], // Adjust these values to match the text you want to highlight
+                      boundingBox: new PSPDFKit.Geometry.Rect({ left: 100, top: 100, width: 200, height: 20 }), // Should match the rects
                   });
-                
-                  // Add the comment marker to the document
-                  instance.create(commentMarker);
-                });
+              
+                  // Add the text markup annotation to the document
+                  await instance.create(textMarkupAnnotation);
+              
+                  // Create a comment associated with the text markup annotation
+                  const comment = new PSPDFKit.Annotations.CommentAnnotation({
+                      pageIndex: 0,
+                      text: { format: 'plain', value: 'This is an automatically added comment' },
+                      parentAnnotation: textMarkupAnnotation.id,
+                  });
+              
+                  // Add the comment to the document
+                  await instance.create(comment);
+              }
               //   let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
               //   console.log(commentInfo)
               //   let annotation;
@@ -253,6 +248,7 @@ const loadPdfWithPage = (currentPage) => {
               //   instance.create(annotation);
               //   instance.create(commentAnnotation);
               //   console.log("created")
+              addAnnotations(instance)
               },4000)
 
             // setInterval(() => {
