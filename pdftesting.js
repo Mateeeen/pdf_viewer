@@ -197,14 +197,24 @@ const loadPdfWithPage = (currentPage) => {
                 let annotation;
                 annotation = new PSPDFKit.Annotations.HighlightAnnotation({
                   pageIndex: commentInfo.pageIndex,
-                  boundingBox: commentInfo.position,
+                  boundingBox: new PSPDFKit.Geometry.Rect({
+                    left: commentInfo.position.left,
+                    top: commentInfo.position.top,
+                    width: commentInfo.position.width,
+                    height: commentInfo.position.height
+                  }),
                   id: commentInfo.rootId
                 });
 
                 const commentAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
                   pageIndex: commentInfo.pageIndex,
                   text: commentInfo.text,
-                  boundingBox: commentInfo.position,
+                  boundingBox: new PSPDFKit.Geometry.Rect({
+                    left: commentInfo.position.left,
+                    top: commentInfo.position.top,
+                    width: commentInfo.position.width,
+                    height: commentInfo.position.height
+                  }),
                   creatorName: commentInfo.creatorName,
                   createdAt: new Date(commentInfo.createdAt),
                   id: commentInfo.id
