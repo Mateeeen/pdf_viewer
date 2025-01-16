@@ -230,7 +230,7 @@ const loadPdfWithPage = (currentPage) => {
               
                     // Create a highlight annotation
                     const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
-                      pageIndex: textLines[0].pageIndex,
+                      pageIndex: 0,
                       rects: rects,
                       boundingBox: PSPDFKit.Geometry.Rect.union(rects)
                     });
