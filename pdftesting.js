@@ -220,7 +220,7 @@ const loadPdfWithPage = (currentPage) => {
                   // Create a comment associated with the text markup annotation
                   const comment = new PSPDFKit.Annotations.CommentAnnotation({
                       pageIndex: 0,
-                      text: { format: 'plain', value: 'This is an automatically added comment' },
+                      text: { format: 'xhtml', value: '<p>This is an automatically added comment</p>' },
                       parentAnnotation: textMarkupAnnotation.id,
                   });
               
