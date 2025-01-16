@@ -209,7 +209,7 @@ const loadPdfWithPage = (currentPage) => {
                     const rects = PSPDFKit.Immutable.List(
                       [new PSPDFKit.Geometry.Rect(commentInfo.rects[0])]
                     );
-                    // comment
+                    // commen
                     const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
                       pageIndex: commentInfo.pageIndex,
                       rects: rects,
