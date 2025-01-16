@@ -207,26 +207,43 @@ const loadPdfWithPage = (currentPage) => {
                 async function addAnnotations(instance) {
                   try {
                     // Get the current text selection
-                    const textSelection = await instance.getTextSelection();
+                    const textSelection = instance.getTextSelection();
                     
                     if (!textSelection) {
                       console.log("No text selected");
                       return;
                     }
               
-                    // Create a highlight annotation from the text selection
-                    const highlightAnnotation = await instance.createAnnotationFromTextSelection(
-                      PSPDFKit.Annotations.HighlightAnnotation,
-                      textSelection
+                    // Get the selected text lines
+                    const textLines = await textSelection.getSelectedTextLines();
+                    
+                    if (textLines.length === 0) {
+                      console.log("No text lines selected");
+                      return;
+                    }
+              
+                    // Create rects from the text lines
+                    const rects = PSPDFKit.Immutable.List(
+                      textLines.map(line => line.boundingBox)
                     );
               
-                    console.log("Created highlight annotation ID:", highlightAnnotation.id);
+                    // Create a highlight annotation
+                    const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
+                      pageIndex: textLines[0].pageIndex,
+                      rects: rects,
+                      boundingBox: PSPDFKit.Geometry.Rect.union(rects)
+                    });
+              
+                    // Add the highlight annotation to the document
+                    const createdHighlight = await instance.create(highlightAnnotation);
+              
+                    console.log("Created highlight annotation ID:", createdHighlight.id);
               
                     // Now create the comment using the ID of the created highlight
                     const comment = new PSPDFKit.Comment({
                       text: "This is an automatically added comment",
-                      pageIndex: highlightAnnotation.pageIndex,
-                      rootId: highlightAnnotation.id
+                      pageIndex: createdHighlight.pageIndex,
+                      rootId: createdHighlight.id
                     });
               
                     // Add the comment to the document
