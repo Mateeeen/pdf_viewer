@@ -236,10 +236,9 @@ const loadPdfWithPage = (currentPage) => {
                     });
               
                     // Add the highlight annotation to the document
-                    const createdHighlight = await instance.create(highlightAnnotation);
-              
-                    console.log("Created highlight annotation ID:", createdHighlight.id);
-              
+                    let createdHighlight = await instance.create([highlightAnnotation]);
+                    createdHighlight = createdHighlight[0]
+                            
                     // Now create the comment using the ID of the created highlight
                     const comment = new PSPDFKit.Comment({
                       text: "This is an automatically added comment",
