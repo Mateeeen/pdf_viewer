@@ -169,7 +169,7 @@ const loadPdfWithPage = (currentPage) => {
                 creatorName: comment.creatorName,
                 createdAt: comment.createdAt
               };
-              localStorage.setItem("commentInfo",commentInfo)
+              localStorage.setItem("commentInfo",JSON.stringify(commentInfo))
               console.log(commentInfo)
               // Now you have the highlight and comment information, you can send it to your server
             }
