@@ -209,6 +209,7 @@ const loadPdfWithPage = (currentPage) => {
                   createdAt: new Date(commentInfo.createdAt),
                   id: commentInfo.id
                 });
+                instance.create(annotation);
                 instance.create(commentAnnotation);
                 console.log("created")
               },4000)
