@@ -195,12 +195,14 @@ const loadPdfWithPage = (currentPage) => {
                   id: commentInfo.rootId
                 });
 
-                instance.createComment(commentInfo.rootId, {
+                const commentAnnotation = new PSPDFKit.Annotations.CommentAnnotation({
+                  pageIndex: commentInfo.pageIndex,
                   text: commentInfo.text,
                   creatorName: commentInfo.creatorName,
                   createdAt: new Date(commentInfo.createdAt),
                   id: commentInfo.id
                 });
+                instance.create(commentAnnotation);
               },2000)
             }
 
