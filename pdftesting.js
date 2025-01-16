@@ -146,11 +146,47 @@ const loadPdfWithPage = (currentPage) => {
 
             instance.addEventListener("annotations.create", (annotations) => {
               annotations.forEach(annotation => {
-                  // This is a new comment
-                  saveCommentInfo(annotation, instance);
-                
+                if (annotation instanceof PSPDFKit.Annotations.TextMarkupAnnotation) {
+                  // This is a new text markup annotation (e.g., highlight)
+                  instance.getComments(annotation.id).then(comments => {
+                    if (comments.size > 0) {
+                      // If there are comments associated with this annotation, it's a new comment on selected text
+                      saveCommentInfo(annotation, comments.get(0));
+                    }
+                    else{
+                      console.log("nothing")
+                    }
+                  });
+                } else if (annotation instanceof PSPDFKit.Annotations.NoteAnnotation) {
+                  // This is a standalone comment (not on selected text)
+                  saveCommentInfo(annotation);
+                }
               });
             });
+            
+            function saveCommentInfo(annotation, comment = null) {
+              const commentInfo = {
+                id: annotation.id,
+                pageIndex: annotation.pageIndex,
+                type: annotation.type
+              };
+            
+              if (comment) {
+                commentInfo.commentId = comment.id;
+                commentInfo.text = comment.text;
+                commentInfo.creatorName = comment.creatorName;
+                commentInfo.createdAt = comment.createdAt;
+              }
+            
+              if (annotation instanceof PSPDFKit.Annotations.TextMarkupAnnotation) {
+                commentInfo.position = annotation.rects;
+              } else if (annotation instanceof PSPDFKit.Annotations.NoteAnnotation) {
+                commentInfo.position = annotation.center;
+              }
+            
+              // Now you have all the necessary information, you can send it to your server
+              console.log(commentInfo);
+            }
 
             // setInterval(() => {
             //   instance.getComments().then(function (comments) {
@@ -283,41 +319,6 @@ setTimeout(()=>{
 
 },10000)
 
-
-function saveCommentInfo(annotation, instance) {
-  instance.getComments().then(comments => {
-    const comment = comments.find(c => c.id === annotation.id);
-    if (comment) {
-      const commentInfo = {
-        id: comment.id,
-        text: comment.text,
-        creatorName: comment.creatorName,
-        createdAt: comment.createdAt,
-        pageIndex: comment.pageIndex,
-        rootId: comment.rootId
-      };
-
-      instance.getAnnotations(comment.pageIndex).then(annotations => {
-        const associatedAnnotation = annotations.find(a => a.id === comment.rootId);
-        if (associatedAnnotation) {
-          if (associatedAnnotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
-            commentInfo.position = associatedAnnotation.boundingBox;
-            commentInfo.annotationType = 'highlight';
-          } else if (associatedAnnotation instanceof PSPDFKit.Annotations.NoteAnnotation) {
-            commentInfo.position = associatedAnnotation.center;
-            commentInfo.annotationType = 'note';
-          }
-        }
-
-        // Now you have all the necessary information, you can send it to your server
-        console.log(commentInfo);
-      });
-    }
-    else{
-      console.log("no comments")
-    }
-  });
-}
 
 // function sendToServer(commentInfo) {
 //   // Implement your server communication logic here
