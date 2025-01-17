@@ -122,6 +122,8 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           
                     comments.forEach((comment, index) => {
                       const commentDate = new Date(comment.createdAt);
+                      console.log(commentDate,"commentDate")
+                      console.log(mostRecentDate,"mostRecentDate")
                       if (commentDate >= mostRecentDate) {
                         mostRecentDate = commentDate;
                         mostRecentIndex = index;
