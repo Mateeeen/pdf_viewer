@@ -68,6 +68,7 @@ const loadPdfWithPage = (currentPage) => {
             // Export PDF button
           // Add more valid types as needed
         ],
+        isEditableComment: () => false,
       })
         .then(function (instance) {
           console.log("PSPDFKit loaded",instance);
