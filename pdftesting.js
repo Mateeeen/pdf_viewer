@@ -225,15 +225,17 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
 makeApiCallAndLoadPdf();
 
 function openModal(){
-  document.getElementById("commentModal").style.display = "block"
+  document.getElementById("commentModal").style.display = "flex"
+  document.getElementById("commentModal").style.visibility = "visible"
+  document.getElementById("commentModal").style.opacity = "1"
 }
 
 if (document.getElementById("privateButton")) {
   document.getElementById("privateButton").addEventListener("click", sendToServerPrivate);
 }
 
-if (document.getElementById("privateButton")) {
-  document.getElementById("privateButton").addEventListener("click", sendToServerPublic);
+if (document.getElementById("publicButton")) {
+  document.getElementById("publicButton").addEventListener("click", sendToServerPublic);
 }
 
 function sendToServerPublic() {
@@ -241,6 +243,7 @@ function sendToServerPublic() {
   console.log(commentInfo)
   console.log("public")
   try {
+
     commentInfo.user_id = localStorage.getItem("user_id")
     commentInfo.pdfUrl = `https://images.app-pursuenetworking.com/public/files/${pdfFileName}` 
     const url = `${globalURl}/save_pdf_comment`;
@@ -253,16 +256,63 @@ function sendToServerPublic() {
       commentInfo,
       })
     );  
+    xhrUrlClose.onreadystatechange = function () {
+      if (xhrUrlClose.readyState == 4 && xhrUrlClose.status == 201) {
+        let userData = JSON.parse(xhrUrlClose.responseText);
+        if(userData.message == "Comment saved successfully!"){
+          document.getElementById("commentModal").style.visibility = "hidden"
+          document.getElementById("commentModal").style.opacity = "0"
+        }
+        else
+        {
+          document.getElementById("commentModal").style.visibility = "hidden"
+          document.getElementById("commentModal").style.opacity = "0"
+        }
+      }
+    } 
 
   } catch (error) {
-
     console.log(error)
   }
-    
 }
 
 function sendToServerPrivate(){
   console.log("Private")
+  let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
+  console.log(commentInfo)
+  console.log("public")
+  try {
+
+    commentInfo.user_id = localStorage.getItem("user_id")
+    commentInfo.pdfUrl = `https://images.app-pursuenetworking.com/public/files/${pdfFileName}` 
+    const url = `${globalURl}/save_pdf_comment_private`;
+    var xhrUrlClose = new XMLHttpRequest();
+  
+    xhrUrlClose.open("POST", url, true);
+    xhrUrlClose.setRequestHeader("Content-Type", "application/json");
+    xhrUrlClose.send(
+    JSON.stringify({
+      commentInfo,
+      })
+    ); 
+    xhrUrlClose.onreadystatechange = function () {
+      if (xhrUrlClose.readyState == 4 && xhrUrlClose.status == 201) {
+        let userData = JSON.parse(xhrUrlClose.responseText);
+        if(userData.message == "Comment saved successfully!"){
+          document.getElementById("commentModal").style.visibility = "hidden"
+          document.getElementById("commentModal").style.opacity = "0"
+        }
+        else
+        {
+          document.getElementById("commentModal").style.visibility = "hidden"
+          document.getElementById("commentModal").style.opacity = "0"
+        }
+      }
+    } 
+
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 
