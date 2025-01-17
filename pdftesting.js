@@ -124,7 +124,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                       const commentDate = new Date(comment.createdAt);
                       const timeDifference = Math.abs(now - commentDate) / 1000; // Difference in seconds
                       console.log(timeDifference,"time")
-                      if (timeDifference <= 35) {
+                      if (timeDifference <= 20) {
                         mostRecentIndex = index;
                       }
                     });
@@ -159,7 +159,8 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
               };
               localStorage.setItem("commentInfo",JSON.stringify(commentInfo))
               console.log(commentInfo)
-              sendToServer(commentInfo)
+              openModal()
+              // sendToServerPublic(commentInfo)
               // Now you have the highlight and comment information, you can send it to your server
             }
 
@@ -231,7 +232,10 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
 // Call the function to make the API request and load the PDF
 makeApiCallAndLoadPdf();
 
-function sendToServer(commentInfo) {
+function openModal(){
+  document.getElementById("commentModal").style.display = "block"
+}
+function sendToServerPublic(commentInfo) {
 
   try {
 
