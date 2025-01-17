@@ -72,7 +72,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
         .then(async function (instance) {
       
           // Set the creator name
-          await instance.setAnnotationCreatorName(creatorName);
+          await instance.setAnnotationCreatorName(`${creatorName}`);
 
           // page change
           instance.addEventListener("viewState.currentPageIndex.change", () => {
