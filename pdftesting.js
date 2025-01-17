@@ -74,7 +74,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             return false
           }
           else{
-            true
+            return true
           }
           // Check the custom data to determine if the comment should be editable
         },
