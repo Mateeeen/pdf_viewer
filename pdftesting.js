@@ -184,7 +184,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                       originalCreatedAt: createdAt.toISOString()
                     },
                     creatorName: commentInfo.creatorName,
-                    color: new PSPDFKit.Color({ hex: "#4caf50" }) // Green color
+                    color: new PSPDFKit.Color({ r: 255, g: 99, b: 71 }) // #ff6347 in RGB
                   });
             
                   // Add the highlight annotation to the document
