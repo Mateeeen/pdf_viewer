@@ -70,11 +70,9 @@ const loadPdfWithPage = (currentPage) => {
         ],
       })
         .then(async function (instance) {
-
-          const pdfMetadata = await instance.getPDFMetadata();
       
           // Set the creator name
-          pdfMetadata.setCreator("Abdul Mateen");
+          await instance.setAnnotationCreatorName("Your Creator Name");
 
           // Fetch and log annotations using supported events
           // instance.addEventListener("annotations.load", (annotations) => {
