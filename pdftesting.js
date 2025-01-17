@@ -87,7 +87,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           // page change
           instance.addEventListener("viewState.currentPageIndex.change", () => {
 
-            console.log("Page changed to: ", instance.viewState.currentPageIndex + 1);
             let user_id = localStorage.getItem("user_id")
               const url = `${globalURl}/save_pdf_page`;
               var xhrUrlClose = new XMLHttpRequest();
@@ -113,9 +112,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
               if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
                 // This is the highlight created when text is selected
                 instance.getComments(annotation.id).then((comments) => {
-                  if (comments.size > 0) {
-                    console.log(comments, "comments");
-          
+                  if (comments.size > 0) {          
                     // Initialize with the current date and time
                     let mostRecentIndex = null;
                     const now = new Date(); // Current date and time
@@ -158,7 +155,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                 createdAt: comment.createdAt
               };
               localStorage.setItem("commentInfo",JSON.stringify(commentInfo))
-              console.log(commentInfo)
               openModal()
               // sendToServerPublic(commentInfo)
               // Now you have the highlight and comment information, you can send it to your server
@@ -175,11 +171,8 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                   const rects = PSPDFKit.Immutable.List(
                     commentInfo.rects.map(rect => new PSPDFKit.Geometry.Rect(rect))
                   );
-                  console.log(commentInfo.createdAt,"commentInfo.createdAt")
 
                   const createdAt = new Date(commentInfo.createdAt);
-
-                  console.log(createdAt,"createdAt")
             
                   // Create the highlight annotation
                   const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
@@ -195,7 +188,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             
                   // Add the highlight annotation to the document
                   const [createdHighlight] = await instance.create([highlightAnnotation]);
-                  console.log(highlightAnnotation.createdAt, "hight created At")
                   // Create the comment associated with the highlight
                   const comment = new PSPDFKit.Comment({
                     text: commentInfo.text, // Accessing the text value (e.g., "<p>Comment</p>")
@@ -235,10 +227,20 @@ makeApiCallAndLoadPdf();
 function openModal(){
   document.getElementById("commentModal").style.display = "block"
 }
-function sendToServerPublic(commentInfo) {
 
+if (document.getElementById("privateButton")) {
+  document.getElementById("privateButton").addEventListener("click", sendToServerPrivate);
+}
+
+if (document.getElementById("privateButton")) {
+  document.getElementById("privateButton").addEventListener("click", sendToServerPublic);
+}
+
+function sendToServerPublic() {
+  let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
+  console.log(commentInfo)
+  console.log("public")
   try {
-
     commentInfo.user_id = localStorage.getItem("user_id")
     commentInfo.pdfUrl = `https://images.app-pursuenetworking.com/public/files/${pdfFileName}` 
     const url = `${globalURl}/save_pdf_comment`;
@@ -257,6 +259,10 @@ function sendToServerPublic(commentInfo) {
     console.log(error)
   }
     
+}
+
+function sendToServerPrivate(){
+  console.log("Private")
 }
 
 
