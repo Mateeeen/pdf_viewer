@@ -68,6 +68,11 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             // Export PDF button
           // Add more valid types as needed
         ],
+
+        isEditableComment: (comment) => {
+          // Check the custom data to determine if the comment should be editable
+          return comment.customData?.isEditable === false;
+        },
       })
         .then(async function (instance) {
       
