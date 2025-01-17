@@ -149,6 +149,8 @@ const loadPdfWithPage = (currentPage,comments) => {
                   );
 
                   const createdAt = new Date(commentInfo.createdAt);
+
+                  console.log(createdAt,"createdAt")
             
                   // Create the highlight annotation
                   const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
