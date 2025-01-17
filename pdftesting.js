@@ -147,6 +147,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                   const rects = PSPDFKit.Immutable.List(
                     commentInfo.rects.map(rect => new PSPDFKit.Geometry.Rect(rect))
                   );
+                  console.log(commentInfo.createdAt,"commentInfo.createdAt")
 
                   const createdAt = new Date(commentInfo.createdAt);
 
