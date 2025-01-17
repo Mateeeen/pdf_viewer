@@ -137,7 +137,12 @@ const loadPdfWithPage = (currentPage,comments) => {
           async function addAnnotations(instance, comments) {
               try {
                 // Iterate over the array of comments retrieved from the API
+                console.log(comments)
                 comments.forEach(async (commentInfo) => {
+                  commentInfo.rects = JSON.parse(commentInfo.rects)
+                  console.log(commentInfo.rects)
+                  commentInfo.text = JSON.parse(commentInfo.text)
+                  console.log(commentInfo.text)
                   // Create a list of rects for the highlight
                   const rects = PSPDFKit.Immutable.List(
                     [new PSPDFKit.Geometry.Rect(commentInfo.rects[0])]
@@ -155,7 +160,7 @@ const loadPdfWithPage = (currentPage,comments) => {
             
                   // Create the comment associated with the highlight
                   const comment = new PSPDFKit.Comment({
-                    text: commentInfo.text.value, // Accessing the text value (e.g., "<p>Comment</p>")
+                    text: commentInfo.text, // Accessing the text value (e.g., "<p>Comment</p>")
                     pageIndex: createdHighlight.pageIndex,
                     rootId: createdHighlight.id, // Link the comment to the highlight ID
                     creatorName: commentInfo.creatorName,
