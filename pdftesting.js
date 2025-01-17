@@ -118,12 +118,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                 }
               });
             });
-
-          // comment Change 
-
-          instance.addEventListener("annotations.update", (event) => {
-            console.log("Edit")
-          })
             
             function saveCommentWithHighlight(highlight, comment) {
               const commentInfo = {
@@ -180,7 +174,8 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                     creatorName: commentInfo.creatorName,
                     createdAt: createdAt,
                     customData: {
-                      originalCreatedAt: createdAt.toISOString()
+                      originalCreatedAt: createdAt.toISOString(),
+                      isEditable: false // Assume this is passed from your server
                     },
                   });
             
