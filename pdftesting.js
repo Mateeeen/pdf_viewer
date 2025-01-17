@@ -71,9 +71,10 @@ const loadPdfWithPage = (currentPage) => {
       })
         .then(async function (instance) {
 
-          await instance.setDocumentMetadata({
-            creator: 'Abdul Mateen'
-          });
+          const pdfMetadata = await instance.getPDFMetadata();
+      
+          // Set the creator name
+          pdfMetadata.setCreator("Abdul Mateen");
 
           // Fetch and log annotations using supported events
           // instance.addEventListener("annotations.load", (annotations) => {
@@ -133,7 +134,13 @@ const loadPdfWithPage = (currentPage) => {
                       const comment = comments.get(0);
                       saveCommentWithHighlight(annotation, comment);
                     }
+                    else{
+                      console.log("no size")
+                    }
                   });
+                }
+                else{
+                  console.log("not a HighlightAnnotation")
                 }
               });
             });
