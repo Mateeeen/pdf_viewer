@@ -114,6 +114,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                   // This is the highlight created when text is selected
                   instance.getComments(annotation.id).then(comments => {
                     if (comments.size > 0) {
+                      console.log(comments,"comments")
                       // If there are comments associated with this highlight, it's a new comment on selected text
                       const comment = comments.get(comments.size - 1);
                       saveCommentWithHighlight(annotation, comment);
