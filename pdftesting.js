@@ -31,13 +31,13 @@ const makeApiCallAndLoadPdf = () => {
       let currentPage = userData.page; // Get the page from the API response
 
       // Load the PDF with the retrieved page
-      loadPdfWithPage(currentPage);
+      loadPdfWithPage(currentPage, userData.comments);
     }
   };
 };
 
 // Function to load the PDF using PSPDFKit
-const loadPdfWithPage = (currentPage) => {
+const loadPdfWithPage = (currentPage,comments) => {
     const baseUrl = "https://pdf-viewer-orpin.vercel.app/Assets/";
     const pdfFileName = localStorage.getItem("pdf_file_name");
 
@@ -74,30 +74,7 @@ const loadPdfWithPage = (currentPage) => {
           // Set the creator name
           await instance.setAnnotationCreatorName("Your Creator Name");
 
-          // Fetch and log annotations using supported events
-          // instance.addEventListener("annotations.load", (annotations) => {
-          //   annotations.forEach((annotation) => {
-          //     if (annotation.type === "Text") {
-          //       console.log(
-          //         `Annotation Loaded (Page ${annotation.pageIndex + 1}):`,
-          //         annotation.contents
-          //       );
-          //     }
-          //   });
-          // });
-
-          // instance.addEventListener("annotations.change", (changedAnnotations) => {
-          //   changedAnnotations.forEach((change) => {
-          //     if (change.type === "Text") {
-          //       console.log(
-          //         `Annotation Changed (Page ${change.pageIndex + 1}):`,
-          //         change.contents
-          //       );
-          //     }
-          //   });
-          // });
-
-          // Additional listener for logging current page index changes
+          // page change
           instance.addEventListener("viewState.currentPageIndex.change", () => {
 
             console.log("Page changed to: ", instance.viewState.currentPageIndex + 1);
@@ -119,9 +96,7 @@ const loadPdfWithPage = (currentPage) => {
             
           });
 
-          setTimeout(()=>{
-            
-
+          // create comments            
             instance.addEventListener("annotations.create", (annotations) => {
               annotations.forEach(annotation => {
                 if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
@@ -158,49 +133,52 @@ const loadPdfWithPage = (currentPage) => {
               // Now you have the highlight and comment information, you can send it to your server
             }
 
-              setTimeout(()=>{
-
-                async function addAnnotations(instance) {
-                  try {
-                    let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
-
-                    const rects = PSPDFKit.Immutable.List(
-                      [new PSPDFKit.Geometry.Rect(commentInfo.rects[0])]
-                    );
-                    // commen
-                    const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
-                      pageIndex: commentInfo.pageIndex,
-                      rects: rects,
-                      boundingBox: PSPDFKit.Geometry.Rect.union(rects)
-                    });
-              
-                    // Add the highlight annotation to the document
-                    let createdHighlight = await instance.create([highlightAnnotation]);
-                    createdHighlight = createdHighlight[0]
-                            
-                    // Now create the comment using the ID of the created highlight
-                    const comment = new PSPDFKit.Comment({
-                      text: commentInfo.text,
-                      pageIndex: createdHighlight.pageIndex,
-                      rootId: createdHighlight.id
-                    });
-              
-                    // Add the comment to the document
-                    await instance.create(comment);
-              
-                    console.log("Highlight and comment created successfully");
-                  } catch (error) {
-                    console.error("Error creating highlight and comment:", error);
-                  }
-              }              
-              },10000)
-          },500)
+            // add comments from server
+          async function addAnnotations(instance, comments) {
+              try {
+                // Iterate over the array of comments retrieved from the API
+                comments.forEach(async (commentInfo) => {
+                  // Create a list of rects for the highlight
+                  const rects = PSPDFKit.Immutable.List(
+                    commentInfo.rects.map((rect) => new PSPDFKit.Geometry.Rect(rect))
+                  );
+            
+                  // Create the highlight annotation
+                  const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
+                    pageIndex: commentInfo.pageIndex,
+                    rects: rects,
+                    boundingBox: PSPDFKit.Geometry.Rect.union(rects),
+                  });
+            
+                  // Add the highlight annotation to the document
+                  const [createdHighlight] = await instance.create([highlightAnnotation]);
+            
+                  // Create the comment associated with the highlight
+                  const comment = new PSPDFKit.Comment({
+                    text: commentInfo.text.value, // Accessing the text value (e.g., "<p>Comment</p>")
+                    pageIndex: createdHighlight.pageIndex,
+                    rootId: createdHighlight.id, // Link the comment to the highlight ID
+                    creatorName: commentInfo.creatorName,
+                    createdAt: commentInfo.createdAt,
+                  });
+            
+                  // Add the comment to the document
+                  await instance.create(comment);
+            
+                  console.log("Highlight and comment created successfully for", commentInfo);
+                });
+              } catch (error) {
+                console.error("Error creating highlight and comment:", error);
+              }
+            }
+                
+        addAnnotations(instance, comments)
 
           
-        })
-        .catch(function (error) {
-          console.error("Error loading PSPDFKit: ", error.message);
-        });
+      })
+      .catch(function (error) {
+        console.error("Error loading PSPDFKit: ", error.message);
+      });
     } else {
       console.error("PDF file name not found in localStorage");
     }
