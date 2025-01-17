@@ -107,28 +107,44 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           });
 
           // create comments            
-            instance.addEventListener("annotations.create", (annotations) => {
-              console.log("create")
-              annotations.forEach(annotation => {
-                if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
-                  // This is the highlight created when text is selected
-                  instance.getComments(annotation.id).then(comments => {
-                    if (comments.size > 0) {
-                      console.log(comments,"comments")
-                      // If there are comments associated with this highlight, it's a new comment on selected text
-                      const comment = comments.get(comments.size - 1);
-                      saveCommentWithHighlight(annotation, comment);
+          instance.addEventListener("annotations.create", (annotations) => {
+            console.log("create");
+            annotations.forEach((annotation) => {
+              if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
+                // This is the highlight created when text is selected
+                instance.getComments(annotation.id).then((comments) => {
+                  if (comments.size > 0) {
+                    console.log(comments, "comments");
+          
+                    // Initialize mostRecentDate with the current date and time
+                    let mostRecentIndex = null;
+                    let mostRecentDate = new Date(); // Current date and time
+          
+                    comments.forEach((comment, index) => {
+                      const commentDate = new Date(comment.createdAt);
+                      if (commentDate > mostRecentDate) {
+                        mostRecentDate = commentDate;
+                        mostRecentIndex = index;
+                      }
+                    });
+          
+                    if (mostRecentIndex !== null) {
+                      const mostRecentComment = comments.get(mostRecentIndex);
+                      console.log("Most recent comment:", mostRecentComment);
+                      saveCommentWithHighlight(annotation, mostRecentComment);
+                    } else {
+                      console.log("No comments are newer than the current date and time.");
                     }
-                    else{
-                      console.log("no size")
-                    }
-                  });
-                }
-                else{
-                  console.log("not a HighlightAnnotation")
-                }
-              });
+                  } else {
+                    console.log("no size");
+                  }
+                });
+              } else {
+                console.log("not a HighlightAnnotation");
+              }
             });
+          });
+          
             
             function saveCommentWithHighlight(highlight, comment) {
               const commentInfo = {
