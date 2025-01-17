@@ -121,7 +121,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
 
           // comment Change 
 
-          instance.addEventListener("annotations.change", (event) => {
+          instance.addEventListener("annotations.update", (event) => {
             console.log("Edit")
           })
             
