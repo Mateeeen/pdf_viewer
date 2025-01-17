@@ -31,13 +31,13 @@ const makeApiCallAndLoadPdf = () => {
       let currentPage = userData.page; // Get the page from the API response
 
       // Load the PDF with the retrieved page
-      loadPdfWithPage(currentPage, userData.comments);
+      loadPdfWithPage(currentPage, userData.comments, userData.creatorName);
     }
   };
 };
 
 // Function to load the PDF using PSPDFKit
-const loadPdfWithPage = (currentPage,comments) => {
+const loadPdfWithPage = (currentPage,comments, creatorName) => {
     const baseUrl = "https://pdf-viewer-orpin.vercel.app/Assets/";
     const pdfFileName = localStorage.getItem("pdf_file_name");
 
@@ -72,7 +72,7 @@ const loadPdfWithPage = (currentPage,comments) => {
         .then(async function (instance) {
       
           // Set the creator name
-          await instance.setAnnotationCreatorName("Your Creator Name");
+          await instance.setAnnotationCreatorName(creatorName);
 
           // page change
           instance.addEventListener("viewState.currentPageIndex.change", () => {
@@ -145,7 +145,7 @@ const loadPdfWithPage = (currentPage,comments) => {
                   console.log(commentInfo.text)
                   // Create a list of rects for the highlight
                   const rects = PSPDFKit.Immutable.List(
-                    [new PSPDFKit.Geometry.Rect(commentInfo.rects[0])]
+                    commentInfo.rects.map(rect => new PSPDFKit.Geometry.Rect(rect))
                   );
 
                   const createdAt = new Date(commentInfo.createdAt);
