@@ -111,8 +111,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             annotations.forEach((annotation) => {
               if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
                 // This is the highlight created when text is selected
-                const updatedAnnotation = annotation.set("color", PSPDFKit.Color.RED);
-                instance.update(updatedAnnotation);
                 instance.getComments(annotation.id).then((comments) => {
                   if (comments.size > 0) {          
                     // Initialize with the current date and time
@@ -157,7 +155,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                 createdAt: comment.createdAt
               };
               localStorage.setItem("commentInfo",JSON.stringify(commentInfo))
-              openModal()
+              openModal(highlight)
               // sendToServerPublic(commentInfo)
               // Now you have the highlight and comment information, you can send it to your server
             }
@@ -211,6 +209,104 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                 console.error("Error creating highlight and comment:", error);
               }
             }
+
+            function openModal(highlight){
+              localStorage.setItem("highlight",JSON.stringify(highlight))
+              document.getElementById("commentModal").style.display = "flex"
+              document.getElementById("commentModal").style.visibility = "visible"
+              document.getElementById("commentModal").style.opacity = "1"
+            }
+            
+            if (document.getElementById("privateButton")) {
+              document.getElementById("privateButton").addEventListener("click", sendToServerPrivate);
+            }
+            
+            if (document.getElementById("publicButton")) {
+              document.getElementById("publicButton").addEventListener("click", sendToServerPublic);
+            }
+            
+            function sendToServerPublic() {
+              let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
+              let highlightedElement = JSON.parse(localStorage.getItem("highlight"))
+              const updatedAnnotation = highlightedElement.set("color", PSPDFKit.Color.YELLOW);
+              instance.update(updatedAnnotation);
+              console.log(commentInfo)
+              console.log("public")
+              try {
+            
+                commentInfo.user_id = localStorage.getItem("user_id")
+                commentInfo.pdfUrl = `https://images.app-pursuenetworking.com/public/files/${pdfFileName}` 
+                const url = `${globalURl}/save_pdf_comment`;
+                var xhrUrlClose = new XMLHttpRequest();
+              
+                xhrUrlClose.open("POST", url, true);
+                xhrUrlClose.setRequestHeader("Content-Type", "application/json");
+                xhrUrlClose.send(
+                JSON.stringify({
+                  commentInfo,
+                  })
+                );  
+                xhrUrlClose.onreadystatechange = function () {
+                  if (xhrUrlClose.readyState == 4 && xhrUrlClose.status == 201) {
+                    let userData = JSON.parse(xhrUrlClose.responseText);
+                    if(userData.message == "Comment saved successfully!"){
+                      document.getElementById("commentModal").style.visibility = "hidden"
+                      document.getElementById("commentModal").style.opacity = "0"
+                    }
+                    else
+                    {
+                      document.getElementById("commentModal").style.visibility = "hidden"
+                      document.getElementById("commentModal").style.opacity = "0"
+                    }
+                  }
+                } 
+            
+              } catch (error) {
+                console.log(error)
+              }
+            }
+            
+            function sendToServerPrivate(){
+              console.log("Private")
+              let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
+              let highlightedElement = JSON.parse(localStorage.getItem("highlight"))
+              const updatedAnnotation = highlightedElement.set("color", PSPDFKit.Color.RED);
+              instance.update(updatedAnnotation);
+              console.log(commentInfo)
+              console.log("public")
+              try {
+            
+                commentInfo.user_id = localStorage.getItem("user_id")
+                commentInfo.pdfUrl = `https://images.app-pursuenetworking.com/public/files/${pdfFileName}` 
+                const url = `${globalURl}/save_pdf_comment_private`;
+                var xhrUrlClose = new XMLHttpRequest();
+              
+                xhrUrlClose.open("POST", url, true);
+                xhrUrlClose.setRequestHeader("Content-Type", "application/json");
+                xhrUrlClose.send(
+                JSON.stringify({
+                  commentInfo,
+                  })
+                ); 
+                xhrUrlClose.onreadystatechange = function () {
+                  if (xhrUrlClose.readyState == 4 && xhrUrlClose.status == 201) {
+                    let userData = JSON.parse(xhrUrlClose.responseText);
+                    if(userData.message == "Comment saved successfully!"){
+                      document.getElementById("commentModal").style.visibility = "hidden"
+                      document.getElementById("commentModal").style.opacity = "0"
+                    }
+                    else
+                    {
+                      document.getElementById("commentModal").style.visibility = "hidden"
+                      document.getElementById("commentModal").style.opacity = "0"
+                    }
+                  }
+                } 
+            
+              } catch (error) {
+                console.log(error)
+              }
+            }
                 
         addAnnotations(instance, comments)
 
@@ -227,96 +323,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
 // Call the function to make the API request and load the PDF
 makeApiCallAndLoadPdf();
 
-function openModal(){
-  document.getElementById("commentModal").style.display = "flex"
-  document.getElementById("commentModal").style.visibility = "visible"
-  document.getElementById("commentModal").style.opacity = "1"
-}
 
-if (document.getElementById("privateButton")) {
-  document.getElementById("privateButton").addEventListener("click", sendToServerPrivate);
-}
-
-if (document.getElementById("publicButton")) {
-  document.getElementById("publicButton").addEventListener("click", sendToServerPublic);
-}
-
-function sendToServerPublic() {
-  let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
-  console.log(commentInfo)
-  console.log("public")
-  try {
-
-    commentInfo.user_id = localStorage.getItem("user_id")
-    commentInfo.pdfUrl = `https://images.app-pursuenetworking.com/public/files/${pdfFileName}` 
-    const url = `${globalURl}/save_pdf_comment`;
-    var xhrUrlClose = new XMLHttpRequest();
-  
-    xhrUrlClose.open("POST", url, true);
-    xhrUrlClose.setRequestHeader("Content-Type", "application/json");
-    xhrUrlClose.send(
-    JSON.stringify({
-      commentInfo,
-      })
-    );  
-    xhrUrlClose.onreadystatechange = function () {
-      if (xhrUrlClose.readyState == 4 && xhrUrlClose.status == 201) {
-        let userData = JSON.parse(xhrUrlClose.responseText);
-        if(userData.message == "Comment saved successfully!"){
-          document.getElementById("commentModal").style.visibility = "hidden"
-          document.getElementById("commentModal").style.opacity = "0"
-        }
-        else
-        {
-          document.getElementById("commentModal").style.visibility = "hidden"
-          document.getElementById("commentModal").style.opacity = "0"
-        }
-      }
-    } 
-
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-function sendToServerPrivate(){
-  console.log("Private")
-  let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
-  console.log(commentInfo)
-  console.log("public")
-  try {
-
-    commentInfo.user_id = localStorage.getItem("user_id")
-    commentInfo.pdfUrl = `https://images.app-pursuenetworking.com/public/files/${pdfFileName}` 
-    const url = `${globalURl}/save_pdf_comment_private`;
-    var xhrUrlClose = new XMLHttpRequest();
-  
-    xhrUrlClose.open("POST", url, true);
-    xhrUrlClose.setRequestHeader("Content-Type", "application/json");
-    xhrUrlClose.send(
-    JSON.stringify({
-      commentInfo,
-      })
-    ); 
-    xhrUrlClose.onreadystatechange = function () {
-      if (xhrUrlClose.readyState == 4 && xhrUrlClose.status == 201) {
-        let userData = JSON.parse(xhrUrlClose.responseText);
-        if(userData.message == "Comment saved successfully!"){
-          document.getElementById("commentModal").style.visibility = "hidden"
-          document.getElementById("commentModal").style.opacity = "0"
-        }
-        else
-        {
-          document.getElementById("commentModal").style.visibility = "hidden"
-          document.getElementById("commentModal").style.opacity = "0"
-        }
-      }
-    } 
-
-  } catch (error) {
-    console.log(error)
-  }
-}
 
 
 
