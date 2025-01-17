@@ -159,6 +159,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                     rects: rects,
                     boundingBox: PSPDFKit.Geometry.Rect.union(rects),
                     createdAt: createdAt,
+                    creatorName: commentInfo.creatorName,
                   });
             
                   // Add the highlight annotation to the document
