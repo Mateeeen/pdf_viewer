@@ -98,6 +98,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
 
           // create comments            
             instance.addEventListener("annotations.create", (annotations) => {
+              console.log("create")
               annotations.forEach(annotation => {
                 if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
                   // This is the highlight created when text is selected
@@ -117,6 +118,12 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                 }
               });
             });
+
+          // comment Change 
+
+          instance.addEventListener("annotations.change", (event) => {
+            console.log("Edit")
+          })
             
             function saveCommentWithHighlight(highlight, comment) {
               const commentInfo = {
@@ -137,12 +144,9 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           async function addAnnotations(instance, comments) {
               try {
                 // Iterate over the array of comments retrieved from the API
-                console.log(comments)
                 comments.forEach(async (commentInfo) => {
                   commentInfo.rects = JSON.parse(commentInfo.rects)
-                  console.log(commentInfo.rects)
                   commentInfo.text = JSON.parse(commentInfo.text)
-                  console.log(commentInfo.text)
                   // Create a list of rects for the highlight
                   const rects = PSPDFKit.Immutable.List(
                     commentInfo.rects.map(rect => new PSPDFKit.Geometry.Rect(rect))
@@ -167,7 +171,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             
                   // Add the highlight annotation to the document
                   const [createdHighlight] = await instance.create([highlightAnnotation]);
-            
+                  console.log(highlightAnnotation.createdAt, "hight created At")
                   // Create the comment associated with the highlight
                   const comment = new PSPDFKit.Comment({
                     text: commentInfo.text, // Accessing the text value (e.g., "<p>Comment</p>")
@@ -181,9 +185,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                   });
             
                   // Add the comment to the document
-                  await instance.create(comment);
-            
-                  console.log("Highlight and comment created successfully for", commentInfo);
+                  await instance.create(comment);            
                 });
               } catch (error) {
                 console.error("Error creating highlight and comment:", error);
