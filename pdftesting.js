@@ -147,6 +147,8 @@ const loadPdfWithPage = (currentPage,comments) => {
                   const rects = PSPDFKit.Immutable.List(
                     [new PSPDFKit.Geometry.Rect(commentInfo.rects[0])]
                   );
+
+                  const createdAt = new Date(commentInfo.createdAt);
             
                   // Create the highlight annotation
                   const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
@@ -164,7 +166,7 @@ const loadPdfWithPage = (currentPage,comments) => {
                     pageIndex: createdHighlight.pageIndex,
                     rootId: createdHighlight.id, // Link the comment to the highlight ID
                     creatorName: commentInfo.creatorName,
-                    createdAt: commentInfo.createdAt,
+                    createdAt: createdAt,
                   });
             
                   // Add the comment to the document
