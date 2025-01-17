@@ -78,6 +78,20 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           }
           // Check the custom data to determine if the comment should be editable
         },
+
+        customUI: {
+          [PSPDFKit.UIElement.Sidebar]: {
+            [PSPDFKit.SidebarMode.DOCUMENT_OUTLINE]({ containerNode }) {
+              // Add custom scrolling logic here
+              containerNode.style.overflowY = 'auto';
+              containerNode.style.maxHeight = '100%';
+              return {
+                node: containerNode
+              };
+            }
+          }
+        }
+        
       })
         .then(async function (instance) {
       
