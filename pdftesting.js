@@ -116,26 +116,25 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                   if (comments.size > 0) {
                     console.log(comments, "comments");
           
-                    // Initialize mostRecentDate with the current date and time
+                    // Initialize with the current date and time
                     let mostRecentIndex = null;
-                    let mostRecentDate = new Date(); // Current date and time
+                    const now = new Date(); // Current date and time
           
                     comments.forEach((comment, index) => {
                       const commentDate = new Date(comment.createdAt);
-                      console.log(commentDate,"commentDate")
-                      console.log(mostRecentDate,"mostRecentDate")
-                      if (commentDate >= mostRecentDate) {
-                        mostRecentDate = commentDate;
+                      const timeDifference = Math.abs(now - commentDate) / 1000; // Difference in seconds
+          
+                      if (timeDifference <= 5) {
                         mostRecentIndex = index;
                       }
                     });
           
                     if (mostRecentIndex !== null) {
-                      const mostRecentComment = comments.get(mostRecentIndex);
-                      console.log("Most recent comment:", mostRecentComment);
-                      saveCommentWithHighlight(annotation, mostRecentComment);
+                      const recentComment = comments.get(mostRecentIndex);
+                      console.log("Comment within 5 seconds:", recentComment);
+                      saveCommentWithHighlight(annotation, recentComment);
                     } else {
-                      console.log("No comments are newer than the current date and time.");
+                      console.log("No comments found within the last 5 seconds.");
                     }
                   } else {
                     console.log("no size");
@@ -146,6 +145,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
               }
             });
           });
+          
           
             
             function saveCommentWithHighlight(highlight, comment) {
