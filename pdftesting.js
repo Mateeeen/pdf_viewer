@@ -140,7 +140,7 @@ const loadPdfWithPage = (currentPage,comments) => {
                 comments.forEach(async (commentInfo) => {
                   // Create a list of rects for the highlight
                   const rects = PSPDFKit.Immutable.List(
-                    commentInfo.rects.map((rect) => new PSPDFKit.Geometry.Rect(rect))
+                    [new PSPDFKit.Geometry.Rect(commentInfo.rects[0])]
                   );
             
                   // Create the highlight annotation
