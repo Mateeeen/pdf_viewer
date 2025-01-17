@@ -124,7 +124,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                       const commentDate = new Date(comment.createdAt);
                       const timeDifference = Math.abs(now - commentDate) / 1000; // Difference in seconds
                       console.log(timeDifference,"time")
-                      if (timeDifference <= 5) {
+                      if (timeDifference <= 35) {
                         mostRecentIndex = index;
                       }
                     });
