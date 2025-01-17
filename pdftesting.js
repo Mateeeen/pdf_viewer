@@ -159,6 +159,9 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                     rects: rects,
                     boundingBox: PSPDFKit.Geometry.Rect.union(rects),
                     createdAt: commentInfo.createdAt,
+                    customData: {
+                      originalCreatedAt: createdAt.toISOString()
+                    },
                     creatorName: commentInfo.creatorName,
                   });
             
@@ -171,6 +174,9 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                     pageIndex: createdHighlight.pageIndex,
                     rootId: createdHighlight.id, // Link the comment to the highlight ID
                     creatorName: commentInfo.creatorName,
+                    customData: {
+                      originalCreatedAt: createdAt.toISOString()
+                    },
                     createdAt: commentInfo.createdAt,
                   });
             
