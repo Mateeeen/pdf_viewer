@@ -71,13 +71,9 @@ const loadPdfWithPage = (currentPage) => {
       })
         .then(async function (instance) {
 
-          const metadata = await instance.getMetadata();
-
-          // Set the creator name
-          const updatedMetadata = metadata.set('creator', 'Abdul Mateen');
-
-          // Update the document's metadata
-          await instance.setMetadata(updatedMetadata);
+          await instance.setDocumentMetadata({
+            creator: 'Abdul Mateen'
+          });
 
           // Fetch and log annotations using supported events
           // instance.addEventListener("annotations.load", (annotations) => {
