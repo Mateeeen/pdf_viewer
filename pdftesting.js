@@ -111,6 +111,8 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             annotations.forEach((annotation) => {
               if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
                 // This is the highlight created when text is selected
+                const updatedAnnotation = annotation.set("color", PSPDFKit.Color.RED);
+                instance.update(updatedAnnotation);
                 instance.getComments(annotation.id).then((comments) => {
                   if (comments.size > 0) {          
                     // Initialize with the current date and time
