@@ -128,6 +128,11 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                 instance.getComments(annotation.id).then((comments) => {
                   if (comments.size > 0) {  
                     console.log(comments.text)
+                    console.log(annotation.text)
+                    console.log(annotation.value)
+                    console.log(comments.value)
+
+
                   }
                 })
                 console.log(annotation.id)
