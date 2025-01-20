@@ -69,7 +69,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           // Add more valid types as needed
         ],
 
-        customRenderers: {
           CommentAvatar: (comment) => {
             const avatarElement = document.createElement("img");
             avatarElement.src = comment.customData.avatarUrl || "/static/avatar.png"; // Use a default avatar if none is provided
@@ -81,7 +80,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
               append: false,
             };
           },
-        },
+        
 
         isEditableComment: (comment) => {
           if(comment.customData){
