@@ -133,6 +133,8 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             { capture: true }
           );
 
+
+          // comment updated
           instance.addEventListener("comments.update", (updatedComments) => {
             updatedComments.forEach(comment => {
               console.log("Updated comment:", comment.text);
@@ -156,6 +158,32 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
               } 
             });
           });
+
+          //comment deleted
+          instance.removeEventListener("comments.delete", deleteComment);
+
+          function deleteComment() {
+            console.log("delete")
+            let annotation = instance.getSelectedAnnotation()
+              if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
+                let annotation = instance.getSelectedAnnotation()
+                const url = `${globalURl}/delete_pdf_comment`;
+                var xhrUrlClose = new XMLHttpRequest();
+                xhrUrlClose.open("POST", url, true);
+                xhrUrlClose.setRequestHeader("Content-Type", "application/json");
+                xhrUrlClose.send(
+                JSON.stringify({
+                  databaseId: annotation.id
+                  })
+                );  
+                xhrUrlClose.onreadystatechange = function () {
+                  if (xhrUrlClose.readyState == 4 && xhrUrlClose.status == 201) {
+                    let userData = JSON.parse(xhrUrlClose.responseText);
+                    
+                  }
+                }
+              }
+          }
         
           // create comments            
           instance.addEventListener("annotations.create", (annotations) => {
