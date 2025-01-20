@@ -103,21 +103,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
       
           // Set the creator name
           await instance.setAnnotationCreatorName(`${creatorName}`);
-          setTimeout(()=>{
-            console.log("hit")
-            instance.setCustomRenderers({
-              CommentAvatar: (comment) => ({
-                node: document.createElement('img'),
-                attrs: {
-                  src: comment.avatarUrl,
-                  alt: `${comment.creatorName}'s avatar`,
-                  style: 'width: 32px; height: 32px; border-radius: 50%;'
-                },
-                append: false
-              })
-            });
-          },10000)
-          
+
           // page change
           instance.addEventListener("viewState.currentPageIndex.change", () => {
 
@@ -278,37 +264,25 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             }
 
             // add comments from server
-          async function addAnnotations(instance, comments) {
+            async function addAnnotations(instance, comments) {
               try {
-                // Iterate over the array of comments retrieved from the API
                 comments.forEach(async (commentInfo) => {
-                  commentInfo.rects = JSON.parse(commentInfo.rects)
-                  commentInfo.text = JSON.parse(commentInfo.text)
-                  // Create a list of rects for the highlight
+                  commentInfo.rects = JSON.parse(commentInfo.rects);
+                  commentInfo.text = JSON.parse(commentInfo.text);
+            
                   const rects = PSPDFKit.Immutable.List(
-                    commentInfo.rects.map(rect => new PSPDFKit.Geometry.Rect(rect))
+                    commentInfo.rects.map((rect) => new PSPDFKit.Geometry.Rect(rect))
                   );
-
+            
                   const createdAt = new Date(commentInfo.createdAt);
             
-                  let colorState;
-                  let editable = false
-                  if(commentInfo.visibility == "private"){
-                    colorState = PSPDFKit.Color.LIGHT_YELLOW
-                  }
-                  else{
-                    colorState = PSPDFKit.Color.LIGHT_BLUE
-                  }
-
-                  if(commentInfo.user_id == localStorage.getItem("user_id")){
-                    editable = true
-                  }
-                  else{
-                    editable = false
-                  }
-
-
-                  // Create the highlight annotation
+                  const colorState =
+                    commentInfo.visibility === "private"
+                      ? PSPDFKit.Color.LIGHT_YELLOW
+                      : PSPDFKit.Color.LIGHT_BLUE;
+            
+                  const editable = commentInfo.user_id === localStorage.getItem("user_id");
+            
                   const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
                     pageIndex: commentInfo.pageIndex,
                     rects: rects,
@@ -316,35 +290,34 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                     createdAt: createdAt,
                     customData: {
                       originalCreatedAt: createdAt.toISOString(),
-                      databaseId: commentInfo.databaseId
+                      databaseId: commentInfo.databaseId,
                     },
                     creatorName: commentInfo.creatorName,
-                    color: colorState
+                    color: colorState,
                   });
             
-                  // Add the highlight annotation to the document
                   const [createdHighlight] = await instance.create([highlightAnnotation]);
-                  // Create the comment associated with the highlight
+            
                   const comment = new PSPDFKit.Comment({
-                    text: commentInfo.text, // Accessing the text value (e.g., "<p>Comment</p>")
+                    text: commentInfo.text,
                     pageIndex: createdHighlight.pageIndex,
-                    rootId: createdHighlight.id, // Link the comment to the highlight ID
+                    rootId: createdHighlight.id,
                     creatorName: commentInfo.creatorName,
                     createdAt: createdAt,
                     customData: {
                       originalCreatedAt: createdAt.toISOString(),
-                      isEditable: editable // Assume this is passed from your server
+                      isEditable: editable,
                     },
-                    avatarUrl: commentInfo.avatar // Add this line to include the profile picture
+                    avatarUrl: commentInfo.avatar || "https://default-avatar-url.com/avatar.png", // Default avatar fallback
                   });
             
-                  // Add the comment to the document
-                  await instance.create(comment);            
+                  await instance.create(comment);
                 });
               } catch (error) {
                 console.error("Error creating highlight and comment:", error);
               }
             }
+            
                 
         addAnnotations(instance, comments)
 
