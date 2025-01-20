@@ -128,9 +128,9 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                 instance.getComments(annotation.id).then((comments) => {
                   if (comments.size > 0) {  
                     comments.forEach((comment, index) => {
-                      console.log(annotation.id)
-                      console.log(instance.contentDocument.activeElement)
-                      console.log(comment.text)
+                      // console.log(annotation.id)
+                      // console.log(instance.contentDocument.activeElement)
+                      // console.log(comment.text)
                     })
                   }
                 })
@@ -160,6 +160,13 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
               if (annotation instanceof PSPDFKit.Annotations.CommentAnnotation) {
                 console.log("Updated comment:", annotation.content);
               }
+            });
+          });
+
+          instance.addEventListener("comments.update", (updatedComments) => {
+            console.log("comment Update")
+            updatedComments.forEach(comment => {
+              console.log("Updated comment:", comment.content);
             });
           });
         
