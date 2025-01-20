@@ -161,23 +161,25 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
 
           instance.addEventListener("annotationSelection.change", (selectedAnnotations) => {
             let annotation = instance.getSelectedAnnotation()
-            console.log("Annotation selection changed:", annotation.id);
+            if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
+              console.log(annotation.id)
+              localStorage.setItem("annotationId",annotation.id)            
+            }
           });
 
           //comment deleted
 
           instance.addEventListener("annotations.delete", (deletedAnnotations) => {
             console.log("delete")
-            let annotation = instance.getSelectedAnnotation()
-            console.log(annotation.id);
-              if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
+            let annotation = localStorage.getItem("annotationId")
+            console.log(annotation);
                 const url = `${globalURl}/delete_pdf_comment`;
                 var xhrUrlClose = new XMLHttpRequest();
                 xhrUrlClose.open("POST", url, true);
                 xhrUrlClose.setRequestHeader("Content-Type", "application/json");
                 xhrUrlClose.send(
                 JSON.stringify({
-                  databaseId: annotation.id
+                  databaseId: annotation
                   })
                 );  
                 xhrUrlClose.onreadystatechange = function () {
@@ -186,7 +188,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                     
                   }
                 }
-              }
+              
           });
         
           // create comments            
