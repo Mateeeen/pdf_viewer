@@ -78,7 +78,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
               console.log()
               let text = JSON.parse(allComments[x]['text'])
               console.log(text.value)
-              console.log(comment['comment'])
+              console.log(comment['comment'].content)
               if(comment.content.value == text.value){
                 avatar = allComments[x]['avatar']
                 return
