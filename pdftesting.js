@@ -125,19 +125,19 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             
           });
 
-          instance.contentDocument.addEventListener(
-            "keyup",
-            function (event) {
-              let annotation = instance.getSelectedAnnotation()
-              if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
-                localStorage.setItem("annotationId",annotation.id)
-              }
-              else{
-                console.log("not a highlight annotastion")
-              }
-            },
-            { capture: true }
-          );
+          // instance.contentDocument.addEventListener(
+          //   "keyup",
+          //   function (event) {
+          //     let annotation = instance.getSelectedAnnotation()
+          //     if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
+          //       localStorage.setItem("annotationId",annotation.id)
+          //     }
+          //     else{
+          //       console.log("not a highlight annotastion")
+          //     }
+          //   },
+          //   { capture: true }
+          // );
 
 
           // comment updated
@@ -170,7 +170,18 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
               console.log(annotation.id)
               console.log(annotation.customData)
-              localStorage.setItem("annotationId",annotation.id)            
+              if(annotation.customData){
+                if(annotation.customData.databaseId){
+                  localStorage.setItem("annotationId",annotation.customData.databaseId)            
+                }
+                else{
+                  localStorage.setItem("annotationId",annotation.id)                       
+                }
+              }
+              else{
+                localStorage.setItem("annotationId",annotation.id)
+              }
+                          
             }
           });
 
