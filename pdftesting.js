@@ -122,55 +122,49 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           instance.contentDocument.addEventListener(
             "keyup",
             function (event) {
-              console.log("keyup")
               let annotation = instance.getSelectedAnnotation()
               if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
-                instance.getComments(annotation.id).then((comments) => {
-                  if (comments.size > 0) {  
-                    comments.forEach((comment, index) => {
-                      // console.log(annotation.id)
-                      // console.log(instance.contentDocument.activeElement)
-                      // console.log(comment.text)
-                    })
-                  }
-                })
+                localStorage.setItem("annotationId",annotation.id)
               }
               else{
                 console.log("not a highlight annotastion")
               }
-              if (
-                event.target === instance.contentDocument.activeElement &&
-                event.target.closest(".PSPDFKit-Note-Annotation-Content")
-              ) {
-                console.log(annotation.id)
-                instance.update(instance.getSelectedAnnotation());
-              }
             },
             { capture: true }
           );
-        
-          // Verify that the annotations are saved when expected.
-          instance.addEventListener("annotations.change", () => {
-            console.log("change");
-          });
-
-          instance.addEventListener("annotations.update", (updatedAnnotations) => {
-            console.log("update")
-            updatedAnnotations.forEach(annotation => {
-              if (annotation instanceof PSPDFKit.Annotations.CommentAnnotation) {
-                console.log("Updated comment:", annotation.content);
-              }
-            });
-          });
 
           instance.addEventListener("comments.update", (updatedComments) => {
-            console.log("comment Update")
             updatedComments.forEach(comment => {
               console.log("Updated comment:", comment.text);
+              let annotationId = localStorage.setItem("annotationId")
+              const url = `${globalURl}/update_pdf_comment`;
+              var xhrUrlClose = new XMLHttpRequest();
+            
+              xhrUrlClose.open("POST", url, true);
+              xhrUrlClose.setRequestHeader("Content-Type", "application/json");
+              xhrUrlClose.send(
+              JSON.stringify({
+                text: comment.text,
+                annotationId: annotationId
+                })
+              );  
+              xhrUrlClose.onreadystatechange = function () {
+                if (xhrUrlClose.readyState == 4 && xhrUrlClose.status == 201) {
+                  let userData = JSON.parse(xhrUrlClose.responseText);
+                  if(userData.message == "Comment saved successfully!"){
+                    document.getElementById("commentModal").style.visibility = "hidden"
+                    document.getElementById("commentModal").style.opacity = "0"
+                  }
+                  else
+                  {
+                    document.getElementById("commentModal").style.visibility = "hidden"
+                    document.getElementById("commentModal").style.opacity = "0"
+                  }
+                }
+              } 
             });
           });
         
-
           // create comments            
           instance.addEventListener("annotations.create", (annotations) => {
             console.log("create");
