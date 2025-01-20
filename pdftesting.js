@@ -159,6 +159,10 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             });
           });
 
+          instance.addEventListener("annotations.select", (selectedAnnotations) => {
+            console.log("Annotations selected:", selectedAnnotations);
+          });
+
           //comment deleted
 
           instance.addEventListener("annotations.delete", (deletedAnnotations) => {
