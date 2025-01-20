@@ -169,7 +169,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             let annotation = instance.getSelectedAnnotation()
             if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
               console.log(annotation.id)
-              console.log(annotation.databaseId)
+              console.log(annotation.customData)
               localStorage.setItem("annotationId",annotation.id)            
             }
           });
