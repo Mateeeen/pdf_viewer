@@ -161,17 +161,10 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
 
           //comment deleted
 
-          instance.addEventListener("comments.change", (deletedComments) => {
-            console.log("deleted")
-          })
-
           instance.addEventListener("annotations.delete", (deletedAnnotations) => {
-            console.log(deletedAnnotations);
-          });
-
-          function deleteComment() {
+            console.log(deletedAnnotations.id);
             console.log("delete")
-            let annotation = instance.getSelectedAnnotation()
+            let annotation = deletedAnnotations
               if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
                 let annotation = instance.getSelectedAnnotation()
                 const url = `${globalURl}/delete_pdf_comment`;
@@ -190,7 +183,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                   }
                 }
               }
-          }
+          });
         
           // create comments            
           instance.addEventListener("annotations.create", (annotations) => {
@@ -230,9 +223,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
               }
             });
           });
-          
-          
-            
+                   
             function saveCommentWithHighlight(highlight, comment) {
               const commentInfo = {
                 databaseId:highlight.id, 
