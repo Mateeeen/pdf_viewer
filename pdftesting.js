@@ -131,8 +131,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                     console.log(annotation.text)
                     console.log(annotation.value)
                     console.log(comments.value)
-
-
+                    console.log(instance.contentDocument.activeElement)
                   }
                 })
                 console.log(annotation.id)
