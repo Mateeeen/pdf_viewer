@@ -160,7 +160,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           });
 
           //comment deleted
-          instance.removeEventListener("comments.delete", deleteComment);
+          instance.addEventListener("comments.delete", deleteComment);
 
           function deleteComment() {
             console.log("delete")
