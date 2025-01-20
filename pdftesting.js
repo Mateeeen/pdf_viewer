@@ -124,7 +124,12 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             function (event) {
               console.log("keyup")
               let annotation = instance.getSelectedAnnotation()
-              console.log(annotation.id)
+              if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
+                console.log(annotation.id)
+              }
+              else{
+                console.log("not a highlight annotastion")
+              }
               if (
                 event.target === instance.contentDocument.activeElement &&
                 event.target.closest(".PSPDFKit-Note-Annotation-Content")
