@@ -122,6 +122,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           instance.contentDocument.addEventListener(
             "keyup",
             function (event) {
+              console.log("keyup")
               if (
                 event.target === instance.contentDocument.activeElement &&
                 event.target.closest(".PSPDFKit-Note-Annotation-Content")
