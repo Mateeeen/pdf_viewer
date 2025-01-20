@@ -81,7 +81,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
               console.log(comment['comment'].content)
               if(comment['comment'].content == text.value){
                 avatar = allComments[x]['avatar']
-                return
+                break
               }
             }
             const avatarElement = document.createElement("img");
