@@ -162,11 +162,10 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           //comment deleted
 
           instance.addEventListener("annotations.delete", (deletedAnnotations) => {
-            console.log(deletedAnnotations.id);
             console.log("delete")
-            let annotation = deletedAnnotations
+            let annotation = instance.getSelectedAnnotation()
+            console.log(annotation.id);
               if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
-                let annotation = instance.getSelectedAnnotation()
                 const url = `${globalURl}/delete_pdf_comment`;
                 var xhrUrlClose = new XMLHttpRequest();
                 xhrUrlClose.open("POST", url, true);
