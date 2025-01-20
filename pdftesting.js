@@ -73,12 +73,8 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           CommentAvatar: (comment) => {
             let avatar = null
             let allComments = JSON.parse(localStorage.getItem("allComments"))
-            console.log(allComments)
             for(let x = 0; x <= allComments.length; x++){
-              console.log()
               let text = JSON.parse(allComments[x]['text'])
-              console.log(text.value)
-              console.log(comment['comment'].content)
               if(comment['comment'].content == text.value){
                 avatar = allComments[x]['avatar']
                 break
@@ -170,7 +166,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           // comment updated
           instance.addEventListener("comments.update", (updatedComments) => {
             updatedComments.forEach(comment => {
-              console.log("Updated comment:", comment.text);
               let annotationId = localStorage.getItem("annotationId")
               const url = `${globalURl}/update_pdf_comment`;
               var xhrUrlClose = new XMLHttpRequest();
@@ -195,8 +190,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           instance.addEventListener("annotationSelection.change", (selectedAnnotations) => {
             let annotation = instance.getSelectedAnnotation()
             if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
-              console.log(annotation.id)
-              console.log(annotation.customData)
               if(annotation.customData){
                 if(annotation.customData.databaseId){
                   localStorage.setItem("annotationId",annotation.customData.databaseId)            
@@ -215,9 +208,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           //comment deleted
 
           instance.addEventListener("annotations.delete", (deletedAnnotations) => {
-            console.log("delete")
             let annotation = localStorage.getItem("annotationId")
-            console.log(annotation);
                 const url = `${globalURl}/delete_pdf_comment`;
                 var xhrUrlClose = new XMLHttpRequest();
                 xhrUrlClose.open("POST", url, true);
@@ -238,7 +229,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
         
           // create comments            
           instance.addEventListener("annotations.create", (annotations) => {
-            console.log("create");
             annotations.forEach((annotation) => {
               if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
                 // This is the highlight created when text is selected
@@ -251,7 +241,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                     comments.forEach((comment, index) => {
                       const commentDate = new Date(comment.createdAt);
                       const timeDifference = Math.abs(now - commentDate) / 1000; // Difference in seconds
-                      console.log(timeDifference,"time")
                       if (timeDifference <= temp_time) {
                         temp_time = timeDifference
                         mostRecentIndex = index;
@@ -260,14 +249,11 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           
                     if (mostRecentIndex !== null) {
                       const recentComment = comments.get(mostRecentIndex);
-                      console.log("Comment within 5 seconds:", recentComment);
                       saveCommentWithHighlight(annotation, recentComment);
                     } else {
                       console.log("No comments found within the last 5 seconds.");
                     }
-                  } else {
-                    console.log("no size");
-                  }
+                  } 
                 });
               } else {
                 console.log("not a HighlightAnnotation");
@@ -378,8 +364,7 @@ if (document.getElementById("publicButton")) {
 
 function sendToServerPublic() {
   let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
-  console.log(commentInfo)
-  console.log("public")
+
   try {
 
     commentInfo.user_id = localStorage.getItem("user_id")
@@ -415,10 +400,8 @@ function sendToServerPublic() {
 }
 
 function sendToServerPrivate(){
-  console.log("Private")
   let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
-  console.log(commentInfo)
-  console.log("public")
+
   try {
 
     commentInfo.user_id = localStorage.getItem("user_id")
