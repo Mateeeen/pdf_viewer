@@ -160,7 +160,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           });
 
           instance.addEventListener("annotationSelection.change", (selectedAnnotations) => {
-            console.log("Annotation selection changed:", selectedAnnotations);
+            console.log("Annotation selection changed:", selectedAnnotations.id);
           });
 
           //comment deleted
