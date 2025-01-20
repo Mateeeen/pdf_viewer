@@ -166,7 +166,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           instance.addEventListener("comments.update", (updatedComments) => {
             console.log("comment Update")
             updatedComments.forEach(comment => {
-              console.log("Updated comment:", comment.content);
+              console.log("Updated comment:", comment.text);
             });
           });
         
