@@ -153,6 +153,15 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           instance.addEventListener("annotations.change", () => {
             console.log("change");
           });
+
+          instance.addEventListener("annotations.update", (updatedAnnotations) => {
+            console.log("update")
+            updatedAnnotations.forEach(annotation => {
+              if (annotation instanceof PSPDFKit.Annotations.CommentAnnotation) {
+                console.log("Updated comment:", annotation.content);
+              }
+            });
+          });
         
 
           // create comments            
