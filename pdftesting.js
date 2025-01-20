@@ -120,7 +120,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           });
 
           instance.contentDocument.addEventListener(
-            "keyup",
+            "change",
             function (event) {
               console.log("keyup")
               let annotation = instance.getSelectedAnnotation()
