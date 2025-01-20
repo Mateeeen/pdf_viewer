@@ -145,21 +145,13 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
               xhrUrlClose.send(
               JSON.stringify({
                 text: comment.text,
-                annotationId: annotationId
+                databaseId: annotationId
                 })
               );  
               xhrUrlClose.onreadystatechange = function () {
                 if (xhrUrlClose.readyState == 4 && xhrUrlClose.status == 201) {
                   let userData = JSON.parse(xhrUrlClose.responseText);
-                  if(userData.message == "Comment saved successfully!"){
-                    document.getElementById("commentModal").style.visibility = "hidden"
-                    document.getElementById("commentModal").style.opacity = "0"
-                  }
-                  else
-                  {
-                    document.getElementById("commentModal").style.visibility = "hidden"
-                    document.getElementById("commentModal").style.opacity = "0"
-                  }
+                  
                 }
               } 
             });
