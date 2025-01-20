@@ -104,6 +104,17 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           // Set the creator name
           await instance.setAnnotationCreatorName(`${creatorName}`);
 
+          instance.setCustomRenderers({
+            CommentAvatar: (comment) => ({
+              node: document.createElement('img'),
+              attrs: {
+                src: comment.avatarUrl,
+                alt: `${comment.creatorName}'s avatar`,
+                style: 'width: 32px; height: 32px; border-radius: 50%;'
+              },
+              append: false
+            })
+          });
           // page change
           instance.addEventListener("viewState.currentPageIndex.change", () => {
 
