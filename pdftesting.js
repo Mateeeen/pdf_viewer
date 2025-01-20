@@ -29,7 +29,7 @@ const makeApiCallAndLoadPdf = () => {
     if (xhrUrl.readyState == 4 && xhrUrl.status == 200) {
       let userData = JSON.parse(xhrUrl.responseText);
       let currentPage = userData.page; // Get the page from the API response
-
+      localStorage.setItem("allComments",stringify(userData.comments))
       // Load the PDF with the retrieved page
       loadPdfWithPage(currentPage, userData.comments, userData.creatorName);
     }
@@ -71,9 +71,15 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
 
         customRenderers: {
           CommentAvatar: (comment) => {
-            console.log(comment)
+            let avatar = null
+            let allComments = JSON.parse(localStorage.getItem("allComments"))
+            for(x = 0; x <= allComments.length; x++){
+              if(comment.content == allComments[x].text){
+                avatar = allComments[x].avatar
+              }
+            }
             const avatarElement = document.createElement("img");
-            avatarElement.src = "https://images.app-pursuenetworking.com/storage/app/DBFnh4oZvm.jpg"
+            avatarElement.src = avatar
             avatarElement.style.borderRadius = "50%"; // Make the avatar circular
             avatarElement.style.width = "32px";
             avatarElement.style.height = "32px";
