@@ -70,7 +70,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
         ],
 
         customRenderers: {
-          CommentAvatar: ({ comment }) => {
+          CommentAvatar: (comment) => {
             const avatarElement = document.createElement("img");
             avatarElement.src = comment.customData.avatarUrl || "/static/avatar.png"; // Use a default avatar if none is provided
             avatarElement.style.borderRadius = "50%"; // Make the avatar circular
