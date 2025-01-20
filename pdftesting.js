@@ -124,7 +124,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             function (event) {
               console.log("keyup")
               let annotation = instance.getSelectedAnnotation()
-              annotation = annotation.toJS()
               if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
                 instance.getComments(annotation.id).then((comments) => {
                   if (comments.size > 0) {  
