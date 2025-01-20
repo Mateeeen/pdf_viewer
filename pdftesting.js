@@ -69,7 +69,9 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           // Add more valid types as needed
         ],
 
+        customRenderers: {
           CommentAvatar: (comment) => {
+            console.log(comment)
             const avatarElement = document.createElement("img");
             avatarElement.src = comment.customData.avatarUrl || "/static/avatar.png"; // Use a default avatar if none is provided
             avatarElement.style.borderRadius = "50%"; // Make the avatar circular
@@ -80,7 +82,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
               append: false,
             };
           },
-        
+        },
 
         isEditableComment: (comment) => {
           if(comment.customData){
