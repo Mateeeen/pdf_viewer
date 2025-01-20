@@ -136,7 +136,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           instance.addEventListener("comments.update", (updatedComments) => {
             updatedComments.forEach(comment => {
               console.log("Updated comment:", comment.text);
-              let annotationId = localStorage.setItem("annotationId")
+              let annotationId = localStorage.getItem("annotationId")
               const url = `${globalURl}/update_pdf_comment`;
               var xhrUrlClose = new XMLHttpRequest();
             
