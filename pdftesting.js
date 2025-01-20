@@ -72,7 +72,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
         customRenderers: {
           CommentAvatar: ({ comment }) => {
             const avatarElement = document.createElement("img");
-            avatarElement.src = comment.avatarUrl || "/static/avatar.png"; // Use a default avatar if none is provided
+            avatarElement.src = comment.customData.avatarUrl || "/static/avatar.png"; // Use a default avatar if none is provided
             avatarElement.style.borderRadius = "50%"; // Make the avatar circular
             avatarElement.style.width = "32px";
             avatarElement.style.height = "32px";
@@ -305,10 +305,10 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                     customData: {
                       originalCreatedAt: createdAt.toISOString(),
                       databaseId: commentInfo.databaseId,
+                      avatarUrl: commentInfo.avatar || "https://default-avatar-url.com/avatar.png", // Default avatar fallback
                     },
                     creatorName: commentInfo.creatorName,
                     color: colorState,
-                    avatarUrl: commentInfo.avatar || "https://default-avatar-url.com/avatar.png", // Default avatar fallback
                   });
             
                   const [createdHighlight] = await instance.create([highlightAnnotation]);
@@ -322,8 +322,8 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                     customData: {
                       originalCreatedAt: createdAt.toISOString(),
                       isEditable: editable,
+                      avatarUrl: commentInfo.avatar || "https://default-avatar-url.com/avatar.png", // Default avatar fallback
                     },
-                    avatarUrl: commentInfo.avatar || "https://default-avatar-url.com/avatar.png", // Default avatar fallback
                   });
             
                   await instance.create(comment);
