@@ -70,7 +70,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
         ],
 
         isEditableComment: (comment) => {
-          if(comment.customData){
+          if(comment.customData.isEditable == false){
             return false
           }
           else{
@@ -259,6 +259,23 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
 
                   const createdAt = new Date(commentInfo.createdAt);
             
+                  let colorState;
+                  let editable = false
+                  if(commentInfo.visibility == "private"){
+                    colorState = PSPDFKit.Color.LIGHT_YELLOW
+                  }
+                  else{
+                    colorState = PSPDFKit.Color.LIGHT_BLUE
+                  }
+
+                  if(commentInfo.user_id == localStorage.getItem("user_id")){
+                    editable = true
+                  }
+                  else{
+                    editable = false
+                  }
+
+
                   // Create the highlight annotation
                   const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
                     pageIndex: commentInfo.pageIndex,
@@ -266,9 +283,11 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                     boundingBox: PSPDFKit.Geometry.Rect.union(rects),
                     createdAt: createdAt,
                     customData: {
-                      originalCreatedAt: createdAt.toISOString()
+                      originalCreatedAt: createdAt.toISOString(),
+                      id: commentInfo.databaseId
                     },
                     creatorName: commentInfo.creatorName,
+                    color: colorState
                   });
             
                   // Add the highlight annotation to the document
@@ -282,7 +301,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                     createdAt: createdAt,
                     customData: {
                       originalCreatedAt: createdAt.toISOString(),
-                      isEditable: false // Assume this is passed from your server
+                      isEditable: editable // Assume this is passed from your server
                     },
                   });
             
