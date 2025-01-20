@@ -128,16 +128,12 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                 instance.getComments(annotation.id).then((comments) => {
                   if (comments.size > 0) {  
                     comments.forEach((comment, index) => {
-                      console.log(comment)
-                      console.log(comment.text)
-                      console.log(annotation.text)
-                      console.log(annotation.value)
-                      console.log(comment.value)
+                      console.log(annotation.id)
                       console.log(instance.contentDocument.activeElement)
+                      console.log(comment.text)
                     })
                   }
                 })
-                console.log(annotation.id)
               }
               else{
                 console.log("not a highlight annotastion")
