@@ -119,20 +119,24 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             
           });
 
-          instance.addEventListener("annotations.update", (updatedAnnotations) => {
-            console.log("update");
-            updatedAnnotations.forEach((annotation) => {
-              if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
-                // This is a highlight annotation that has been updated
-                instance.getComments(annotation.id).then((comments) => {
-                  // Your existing logic for processing comments can go here
-                  // ...
-                });
-              } else {
-                console.log("not a HighlightAnnotation");
+          instance.contentDocument.addEventListener(
+            "keyup",
+            function (event) {
+              if (
+                event.target === instance.contentDocument.activeElement &&
+                event.target.closest(".PSPDFKit-Note-Annotation-Content")
+              ) {
+                instance.update(instance.getSelectedAnnotation());
               }
-            });
+            },
+            { capture: true }
+          );
+        
+          // Verify that the annotations are saved when expected.
+          instance.addEventListener("annotations.didSave", () => {
+            console.log("saved");
           });
+        
 
           // create comments            
           instance.addEventListener("annotations.create", (annotations) => {
