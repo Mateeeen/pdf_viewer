@@ -135,7 +135,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                       console.log(comment.value)
                       console.log(instance.contentDocument.activeElement)
                     })
-                    
                   }
                 })
                 console.log(annotation.id)
@@ -155,8 +154,8 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           );
         
           // Verify that the annotations are saved when expected.
-          instance.addEventListener("annotations.didSave", () => {
-            console.log("saved");
+          instance.addEventListener("annotations.change", () => {
+            console.log("change");
           });
         
 
