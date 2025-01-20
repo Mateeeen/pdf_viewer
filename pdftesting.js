@@ -29,7 +29,7 @@ const makeApiCallAndLoadPdf = () => {
     if (xhrUrl.readyState == 4 && xhrUrl.status == 200) {
       let userData = JSON.parse(xhrUrl.responseText);
       let currentPage = userData.page; // Get the page from the API response
-      localStorage.setItem("allComments",stringify(userData.comments))
+      localStorage.setItem("allComments",JSON.stringify(userData.comments))
       // Load the PDF with the retrieved page
       loadPdfWithPage(currentPage, userData.comments, userData.creatorName);
     }
