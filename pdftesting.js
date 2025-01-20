@@ -69,6 +69,20 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           // Add more valid types as needed
         ],
 
+        customRenderers: {
+          CommentAvatar: ({ comment }) => {
+            const avatarElement = document.createElement("img");
+            avatarElement.src = comment.avatarUrl || "/static/avatar.png"; // Use a default avatar if none is provided
+            avatarElement.style.borderRadius = "50%"; // Make the avatar circular
+            avatarElement.style.width = "32px";
+            avatarElement.style.height = "32px";
+            return {
+              node: avatarElement,
+              append: false,
+            };
+          },
+        },
+
         isEditableComment: (comment) => {
           if(comment.customData){
             if(comment.customData.isEditable == false){
@@ -294,6 +308,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                     },
                     creatorName: commentInfo.creatorName,
                     color: colorState,
+                    avatarUrl: commentInfo.avatar || "https://default-avatar-url.com/avatar.png", // Default avatar fallback
                   });
             
                   const [createdHighlight] = await instance.create([highlightAnnotation]);
