@@ -127,11 +127,11 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
               if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
                 instance.getComments(annotation.id).then((comments) => {
                   if (comments.size > 0) {  
-                    console.log(comments)
-                    console.log(comments.text)
+                    console.log(comments[0])
+                    console.log(comments[0].text)
                     console.log(annotation.text)
                     console.log(annotation.value)
-                    console.log(comments.value)
+                    console.log(comments[0].value)
                     console.log(instance.contentDocument.activeElement)
                   }
                 })
