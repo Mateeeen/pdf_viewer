@@ -161,7 +161,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
 
           //comment deleted
 
-          instance.addEventListener("comments.delete", (deletedComments) => {
+          instance.addEventListener("comments.change", (deletedComments) => {
             console.log("deleted")
             deletedComments.forEach(comment => {
               deleteComment()
