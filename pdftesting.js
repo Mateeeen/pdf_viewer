@@ -321,6 +321,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                       originalCreatedAt: createdAt.toISOString(),
                       isEditable: editable // Assume this is passed from your server
                     },
+                    avatarUrl: commentInfo.avatar // Add this line to include the profile picture
                   });
             
                   // Add the comment to the document
