@@ -84,7 +84,15 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                       break
                     }
                   }
+                  else
+                  {
+                    avatar = localStorage.getItem("userImage")
+                  }
                 } 
+                else
+                {
+                  avatar = localStorage.getItem("userImage")
+                }
               }
             }
             else
