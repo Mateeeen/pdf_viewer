@@ -390,7 +390,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             
                   const [createdHighlight] = await instance.create([highlightAnnotation]);
             
-                  const comment = new PSPDFKit.Comment({
+                  let comment = new PSPDFKit.Comment({
                     text: commentInfo.text,
                     pageIndex: createdHighlight.pageIndex,
                     rootId: createdHighlight.id,
@@ -404,10 +404,22 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                   });
             
                   await instance.create(comment);
-                  if(c == 1){
-                    addAnnotations(instance, comments)
-                    c = c + 1;
-                  }
+
+                  comment = new PSPDFKit.Comment({
+                    text: commentInfo.text,
+                    pageIndex: createdHighlight.pageIndex,
+                    rootId: createdHighlight.id,
+                    creatorName: commentInfo.creatorName,
+                    createdAt: createdAt,
+                    customData: {
+                      originalCreatedAt: createdAt.toISOString(),
+                      isEditable: editable,
+                      avatarUrl: commentInfo.avatar || "https://default-avatar-url.com/avatar.png", // Default avatar fallback
+                    },
+                  });
+            
+                  await instance.create(comment);
+                  
                 });
               } catch (error) {
                 console.error("Error creating highlight and comment:", error);
