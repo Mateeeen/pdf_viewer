@@ -356,7 +356,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             async function addAnnotations(instance, comments) {
               try {
                 comments.forEach(async (commentInfo) => {
-                  console.og(commentInfo,"commentInfo")
+                  console.log(commentInfo,"commentInfo")
                   commentInfo.rects = JSON.parse(commentInfo.rects);
                   commentInfo.text = JSON.parse(commentInfo.text);
             
