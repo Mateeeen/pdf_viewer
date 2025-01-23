@@ -333,8 +333,9 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           });
                    
             function saveCommentWithHighlight(highlight, comment) {
-              console.log(highlight.boundingBox.toJS(),"rects")
-              console.log(highlight,"Full")
+              console.log(highlight.boundingBox.toJS(),"bounding")
+              console.log(highlight.rects.toJs(),"rects")
+              console.log(highlight.toJs(),"Full")
               const commentInfo = {
                 databaseId:highlight.id, 
                 pageIndex: highlight.pageIndex,
