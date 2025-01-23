@@ -61,8 +61,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           { type: "zoom-in" },            // Zoom In button
           { type: "zoom-out" },           // Zoom Out button
           { type: "annotate" },     
-          { type: "text"},
-          { type: "highlighter"},         // Annotation tools (text, ink, highlighter)
           { type: "print" },              // Print button
           { type: "export-pdf" }, 
           
