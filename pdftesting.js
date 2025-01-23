@@ -305,6 +305,29 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                 });
               } else {
                 console.log("not a HighlightAnnotation", annotation.type);
+                instance.getComments(annotation.id).then((comments) => {
+                  if (comments.size > 0) {          
+                    // Initialize with the current date and time
+                    let mostRecentIndex = null;
+                    const now = new Date(); // Current date and time
+                    let temp_time = 100000000
+                    comments.forEach((comment, index) => {
+                      const commentDate = new Date(comment.createdAt);
+                      const timeDifference = Math.abs(now - commentDate) / 1000; // Difference in seconds
+                      if (timeDifference <= temp_time) {
+                        temp_time = timeDifference
+                        mostRecentIndex = index;
+                      }
+                    });
+          
+                    if (mostRecentIndex !== null) {
+                      const recentComment = comments.get(mostRecentIndex);
+                      saveCommentWithHighlight(annotation, recentComment);
+                    } else {
+                      console.log("No comments found within the last 5 seconds.");
+                    }
+                  } 
+                });
               }
             });
           });
