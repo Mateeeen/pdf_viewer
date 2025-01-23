@@ -63,6 +63,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           { type: "annotate" },     
           { type: "print" },              // Print button
           { type: "export-pdf" }, 
+          { type: "comment" }
         ],
 
         inlineTextSelectionToolbarItems: ({ defaultItems }) => {
