@@ -304,7 +304,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                   } 
                 });
               } else {
-                console.log("not a HighlightAnnotation");
+                console.log("not a HighlightAnnotation", annotation.type);
               }
             });
           });
