@@ -63,10 +63,12 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           { type: "annotate" },     
           { type: "print" },              // Print button
           { type: "export-pdf" }, 
-          
-            // Export PDF button
-          // Add more valid types as needed
         ],
+
+        inlineTextSelectionToolbarItems: ({ defaultItems }) => {
+          // Filter the default items to keep only the comment option
+          return defaultItems.filter(item => item.type === "comment");
+        },
 
         customRenderers: {
           CommentAvatar: (comment) => {
