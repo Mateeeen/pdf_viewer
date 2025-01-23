@@ -247,6 +247,9 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
         
                     console.log("Comment saved with position:", commentInfo);
                 }
+                else{
+                  console.log("not a marker comment")
+                }
             }
           });
 
