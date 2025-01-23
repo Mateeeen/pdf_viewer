@@ -73,24 +73,28 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           CommentAvatar: (comment) => {
             let avatar = null
             let allComments = JSON.parse(localStorage.getItem("allComments"))
-            for(let x = 0; x <= allComments.length; x++){
-              if(allComments[x]['text']){
-                let text = JSON.parse(allComments[x]['text'])
-                if(comment['comment'].content == text.value){
-                  avatar = allComments[x]['avatar']
-                  break
-                }
+            if(allComments.length > 0){
+              for(let x = 0; x <= allComments.length; x++){
+                if(allComments[x]){
+                  if(allComments[x]['text']){
+                    let text = JSON.parse(allComments[x]['text'])
+                    if(comment['comment'].content == text.value){
+                      avatar = allComments[x]['avatar']
+                      break
+                    }
+                  }
+                } 
               }
+              const avatarElement = document.createElement("img");
+              avatarElement.src = avatar
+              avatarElement.style.borderRadius = "50%"; // Make the avatar circular
+              avatarElement.style.width = "32px";
+              avatarElement.style.height = "32px";
+              return {
+                node: avatarElement,
+                append: false,
+              };
             }
-            const avatarElement = document.createElement("img");
-            avatarElement.src = avatar
-            avatarElement.style.borderRadius = "50%"; // Make the avatar circular
-            avatarElement.style.width = "32px";
-            avatarElement.style.height = "32px";
-            return {
-              node: avatarElement,
-              append: false,
-            };
           },
         },
 
