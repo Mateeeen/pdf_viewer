@@ -355,6 +355,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             // add comments from server
             async function addAnnotations(instance, comments) {
               try {
+                let c = 1
                 comments.forEach(async (commentInfo) => {
                   console.log(commentInfo,"commentInfo")
                   commentInfo.rects = JSON.parse(commentInfo.rects);
@@ -403,6 +404,10 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                   });
             
                   await instance.create(comment);
+                  if(c == 1){
+                    addAnnotations(instance, comments)
+                    c = c + 1;
+                  }
                 });
               } catch (error) {
                 console.error("Error creating highlight and comment:", error);
@@ -411,9 +416,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             
                 
         addAnnotations(instance, comments)
-        setTimeout(()=>{
-          addAnnotations(instance, comments)
-        },3000)
+        
 
           
       })
