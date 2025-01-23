@@ -412,7 +412,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
         addAnnotations(instance, comments)
         setTimeout(()=>{
           addAnnotations(instance, comments)
-        },10000)
+        },3000)
 
           
       })
