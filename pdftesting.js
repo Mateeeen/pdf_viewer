@@ -30,6 +30,7 @@ const makeApiCallAndLoadPdf = () => {
       let userData = JSON.parse(xhrUrl.responseText);
       let currentPage = userData.page; // Get the page from the API response
       localStorage.setItem("allComments",JSON.stringify(userData.comments))
+      localStorage.setItem("userImage",userData.creatorImage)
       // Load the PDF with the retrieved page
       loadPdfWithPage(currentPage, userData.comments, userData.creatorName);
     }
@@ -85,16 +86,20 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                   }
                 } 
               }
-              const avatarElement = document.createElement("img");
-              avatarElement.src = avatar
-              avatarElement.style.borderRadius = "50%"; // Make the avatar circular
-              avatarElement.style.width = "32px";
-              avatarElement.style.height = "32px";
-              return {
-                node: avatarElement,
-                append: false,
-              };
             }
+            else
+            {
+              avatar = localStorage.getItem("userImage")
+            }
+            const avatarElement = document.createElement("img");
+            avatarElement.src = avatar
+            avatarElement.style.borderRadius = "50%"; // Make the avatar circular
+            avatarElement.style.width = "32px";
+            avatarElement.style.height = "32px";
+            return {
+              node: avatarElement,
+              append: false,
+            };
           },
         },
 
