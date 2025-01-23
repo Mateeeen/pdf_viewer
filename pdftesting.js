@@ -74,10 +74,12 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             let avatar = null
             let allComments = JSON.parse(localStorage.getItem("allComments"))
             for(let x = 0; x <= allComments.length; x++){
-              let text = JSON.parse(allComments[x]['text'])
-              if(comment['comment'].content == text.value){
-                avatar = allComments[x]['avatar']
-                break
+              if(allComments[x]['text']){
+                let text = JSON.parse(allComments[x]['text'])
+                if(comment['comment'].content == text.value){
+                  avatar = allComments[x]['avatar']
+                  break
+                }
               }
             }
             const avatarElement = document.createElement("img");
