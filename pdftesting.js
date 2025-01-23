@@ -225,6 +225,15 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             }
           });
 
+          // Top bar comment creation
+
+          instance.addEventListener("comments.create", createdComments => {
+            createdComments.forEach(comment => {
+                console.log("New comment text:", comment);
+                console.log("New comment text:", comment.text);
+            });
+          });
+
           //comment deleted
 
           instance.addEventListener("annotations.delete", (deletedAnnotations) => {
