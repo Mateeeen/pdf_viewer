@@ -229,6 +229,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
 
           instance.addEventListener("comments.create", async createdComments => {
             for (const comment of createdComments) {
+              console.log(comment.toJS(),"comment")
                 // Get the associated annotation (comment marker)
                 const annotations = await instance.getAnnotations(comment.pageIndex);
                 const commentMarker = annotations.find(a => 
