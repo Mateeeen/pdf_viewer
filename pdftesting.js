@@ -227,11 +227,27 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
 
           // Top bar comment creation
 
-          instance.addEventListener("comments.create", createdComments => {
-            createdComments.forEach(comment => {
-                console.log("New comment text:", comment);
-                console.log("New comment text:", comment.text);
-            });
+          instance.addEventListener("comments.create", async createdComments => {
+            for (const comment of createdComments) {
+                // Get the associated annotation (comment marker)
+                const annotations = await instance.getAnnotations(comment.pageIndex);
+                const commentMarker = annotations.find(a => 
+                    a.type === "pspdfkit/comment-marker" && a.id === comment.annotationId
+                );
+        
+                if (commentMarker) {
+                    const commentInfo = {
+                        id: comment.id,
+                        text: comment.text,
+                        creatorName: comment.creatorName,
+                        createdAt: comment.createdAt,
+                        pageIndex: comment.pageIndex,
+                        position: commentMarker.boundingBox // This contains the position
+                    };
+        
+                    console.log("Comment saved with position:", commentInfo);
+                }
+            }
           });
 
           //comment deleted
