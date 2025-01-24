@@ -49,7 +49,6 @@ const makeApiCallAndLoadPdf = () => {
           return merged;
       });
       localStorage.setItem("allComments", JSON.stringify(allComments));
-      console.log("Merged comments saved to localStorage:", allComments);
       localStorage.setItem("userImage",userData.creatorImage)
       if(userData.comments.length < 1){
         localStorage.removeItem("start")
@@ -240,16 +239,13 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
               if(annotation.customData){
                 if(annotation.customData.databaseId){
-                  console.log(annotation.customData.databaseId,"annotation.id")
                   localStorage.setItem("annotationId",annotation.customData.databaseId)            
                 }
                 else{
-                  console.log(annotation.id,"annotation.id")
                   localStorage.setItem("annotationId",annotation.id)                       
                 }
               }
               else{
-                console.log(annotation.id,"annotation.id")
                 localStorage.setItem("annotationId",annotation.id)
               }
                           
@@ -286,7 +282,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                       const annotationToDelete = annotations.find(a => a.id == comment.rootId);
                       if (annotationToDelete) {
                         await instance.delete(annotationToDelete);
-                        console.log("Annotation deleted.");
                       }
                     } catch (error) {
                       console.error("Error deleting annotation:", error);
@@ -303,7 +298,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
               if(!localStorage.getItem("start")){
                 setTimeout(()=>{
                   if(localStorage.getItem("annotationInfo")){
-                    console.log(comment.toJS(),"comment")
                     const commentInfo = {
                       commentId: comment.id,
                       text: comment.text,
@@ -386,7 +380,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
               try {
                 let c = 1
                 comments.forEach(async (commentInfo) => {
-                  console.log(commentInfo,"commentInfo")
                   commentInfo.rects = JSON.parse(commentInfo.rects);
                   commentInfo.text = JSON.parse(commentInfo.text);
             
