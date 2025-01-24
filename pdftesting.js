@@ -224,38 +224,8 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                           
             }
           });
-
-          // Top bar comment creation
-
-          instance.addEventListener("comments.create", async createdComments => {
-            for (const comment of createdComments) {
-              console.log(comment.toJS(),"comment")
-                // Get the associated annotation (comment marker)
-                const annotations = await instance.getAnnotations(comment.pageIndex);
-                const commentMarker = annotations.find(a => 
-                    a.type === "pspdfkit/comment-marker" && a.id === comment.annotationId
-                );
-        
-                if (commentMarker) {
-                    const commentInfo = {
-                        id: comment.id,
-                        text: comment.text,
-                        creatorName: comment.creatorName,
-                        createdAt: comment.createdAt,
-                        pageIndex: comment.pageIndex,
-                        position: commentMarker.boundingBox // This contains the position
-                    };
-        
-                    console.log("Comment saved with position:", commentInfo);
-                }
-                else{
-                  console.log("not a marker comment")
-                }
-            }
-          });
-
+          
           //comment deleted
-
           instance.addEventListener("annotations.delete", (deletedAnnotations) => {
             let annotation = localStorage.getItem("annotationId")
                 const url = `${globalURl}/delete_pdf_comment`;
@@ -273,6 +243,20 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                     
                   }
                 }
+          });
+
+          // Top bar comment creation
+          instance.addEventListener("comments.create", async createdComments => {
+            for (const comment of createdComments) {
+              console.log(comment.toJS(),"comment")
+              const commentInfo = {
+                commentId: comment.id,
+                text: comment.text,
+                creatorName: comment.creatorName,
+                createdAt: comment.createdAt,
+              };
+              localStorage.setItem("commentInfo",commentInfo)
+            }
           });
         
           // create comments            
@@ -304,52 +288,20 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                   } 
                 });
               } else {
-                console.log("not a HighlightAnnotation", annotation.type);
-                instance.getComments(annotation.id).then((comments) => {
-                  if (comments.size > 0) {          
-                    // Initialize with the current date and time
-                    let mostRecentIndex = null;
-                    const now = new Date(); // Current date and time
-                    let temp_time = 100000000
-                    comments.forEach((comment, index) => {
-                      const commentDate = new Date(comment.createdAt);
-                      const timeDifference = Math.abs(now - commentDate) / 1000; // Difference in seconds
-                      if (timeDifference <= temp_time) {
-                        temp_time = timeDifference
-                        mostRecentIndex = index;
-                      }
-                    });
-          
-                    if (mostRecentIndex !== null) {
-                      const recentComment = comments.get(mostRecentIndex);
-                      saveCommentWithHighlight(annotation, recentComment);
-                    } else {
-                      console.log("No comments found within the last 5 seconds.");
-                    }
-                  } 
-                });
+                console.log("not a HighlightAnnotation");
               }
             });
           });
                    
             function saveCommentWithHighlight(highlight, comment) {
-              console.log(highlight.boundingBox.toJS(),"bounding")
-              if(highlight.rects){
-                console.log(highlight.rects.toJS(),"rects")
-              }
-              console.log(highlight.toJS(),"Full")
-              const commentInfo = {
+              
+              const annottationInfo = {
                 databaseId:highlight.id, 
                 pageIndex: highlight.pageIndex,
                 rects: highlight.rects.toJS(),
-                text: comment.text,
-                creatorName: comment.creatorName,
-                createdAt: comment.createdAt
               };
-              localStorage.setItem("commentInfo",JSON.stringify(commentInfo))
+              localStorage.setItem("annotationInfo",JSON.stringify(annottationInfo))
               openModal()
-              // sendToServerPublic(commentInfo)
-              // Now you have the highlight and comment information, you can send it to your server
             }
 
             // add comments from server
@@ -429,8 +381,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                 
         addAnnotations(instance, comments)
         
-
-          
       })
       .catch(function (error) {
         console.error("Error loading PSPDFKit: ", error.message);
@@ -459,6 +409,10 @@ if (document.getElementById("publicButton")) {
 
 function sendToServerPublic() {
   let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
+  let annotationInfo = JSON.parse(localStorage.getItem("annotationInfo"))
+  commentInfo.databaseId = annotationInfo.databaseId
+  commentInfo.pageIndex = annotationInfo.pageIndex
+  commentInfo.rects = annotationInfo.rects
 
   try {
 
