@@ -34,6 +34,9 @@ const makeApiCallAndLoadPdf = () => {
       let currentPage = userData.page; // Get the page from the API response
       localStorage.setItem("allComments",JSON.stringify(userData.comments))
       localStorage.setItem("userImage",userData.creatorImage)
+      if(userData.comments.length < 1){
+        localStorage.removeItem("start")
+      }
       // Load the PDF with the retrieved page
       loadPdfWithPage(currentPage, userData.comments, userData.creatorName);
     }
