@@ -67,7 +67,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
 
     if (pdfFileName) {
       const documentUrl = `https://social-login.app-pursuenetworking.com/public/files/${pdfFileName}`;
-      PSPDFKit.unsetLogHandler();
       PSPDFKit.load({
         baseUrl,
         container: "#pspdfkit",
@@ -75,6 +74,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
         initialViewState: new PSPDFKit.ViewState({
           currentPageIndex: currentPage - 1,
         }),
+        enableLogging: false,
         toolbarItems: [
           { type: "sidebar-thumbnails"},
           { type: "sidebar-document-outline"}, 
