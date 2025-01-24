@@ -255,7 +255,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                 creatorName: comment.creatorName,
                 createdAt: comment.createdAt,
               };
-              localStorage.setItem("commentInfo",commentInfo)
+              localStorage.setItem("commentInfo",JSON.stringify(commentInfo))
             }
           });
         
