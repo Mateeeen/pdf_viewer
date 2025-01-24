@@ -237,7 +237,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           });
           
           //comment deleted
-          instance.addEventListener("annotations.delete", (deletedAnnotations) => {
+          instance.addEventListener("comments.delete", (deletedAnnotations) => {
             deletedAnnotations.forEach(comment => {
               let annotation = localStorage.getItem("annotationId")
               let commentId = null
