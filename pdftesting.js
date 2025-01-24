@@ -71,6 +71,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
         baseUrl,
         container: "#pspdfkit",
         document: documentUrl,
+        licenseKey: "n9JRI_GfjxJe1tfMzECmvqwUF7NnnbAmjryoz33QPpQ7NoEiBE648VoabtJvK-WHhR4T4_yFGrtNwVxcquJS-OteRs17q_n3PQytl1yZQrGGqugQMyTfP2f77tmrlk4seY-q-qu8X8i_qEY95Ab26H6waFbDztmDpphHCN01v75KYpXtt-8jJVi6e8ksrcYv-4Xeqlk_bbZOybeKxGWFxqQL0oQcYcl9xVKdJvKtPaXniD60cSbSsIgSIhi0mKpvJJ9HxOOxpnq_vMUwYVt7-VeNEsRc_pHkixyHcWKdOmaqwJj6tbSB5Ee1xuOrEJsjJ-EUjtHleCx-yVsjDJlkPspf9Fm3eY-_29z26Ys-u0BzUzTz0xiWuyegenLCkPzqwosEwBD34Z1IcJzw_xEZVKos8g36N1E6hs2ZsLKjGtpLWaRKhfBZy84kMgPXIln6xrnbtTgKPjraX3jJC5bWK3fR92TtEGpB4pnxercSGCYgHik8k0c0t9zmcHy85GxbJpGL_9lmWyqcZO-lbOzCQikUlhgvGHmNAZTb_vFL3P4=",
         initialViewState: new PSPDFKit.ViewState({
           currentPageIndex: currentPage - 1,
         }),
