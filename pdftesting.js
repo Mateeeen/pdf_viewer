@@ -32,7 +32,24 @@ const makeApiCallAndLoadPdf = () => {
     if (xhrUrl.readyState == 4 && xhrUrl.status == 200) {
       let userData = JSON.parse(xhrUrl.responseText);
       let currentPage = userData.page; // Get the page from the API response
-      localStorage.setItem("allComments",JSON.stringify(userData.comments))
+      let comments = userData.comments;
+
+      // Flatten the replies and merge them into the comments array
+      let allComments = comments.flatMap(comment => {
+          // Add the main comment to the array
+          let merged = [comment];
+          // Add all replies to the array
+          if (Array.isArray(comment.replies)) {
+              merged = merged.concat(comment.replies.map(reply => {
+                  // Include additional properties for context
+                  reply.parentCommentId = comment.commentId; // Link the reply to the parent comment
+                  return reply;
+              }));
+          }
+          return merged;
+      });
+      localStorage.setItem("allComments", JSON.stringify(allComments));
+      console.log("Merged comments saved to localStorage:", allComments);
       localStorage.setItem("userImage",userData.creatorImage)
       if(userData.comments.length < 1){
         localStorage.removeItem("start")
