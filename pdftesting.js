@@ -261,11 +261,15 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                 if (xhrUrlClose.readyState == 4 && xhrUrlClose.status == 201) {
                   let userData = JSON.parse(xhrUrlClose.responseText);
                   if(userData.deleteAnnotation){
-                    for (const comment of deletedComment) {
-                      const annotation = await instance.getAnnotation(comment.annotationId);
-                      if (annotation) {
-                        await instance.delete(annotation);
+                    try {
+                      const annotations = await instance.getAnnotations(comment.pageIndex);
+                      const annotationToDelete = annotations.find(a => a.id == comment.rootId);
+                      if (annotationToDelete) {
+                        await instance.delete(annotationToDelete);
+                        console.log("Annotation deleted.");
                       }
+                    } catch (error) {
+                      console.error("Error deleting annotation:", error);
                     }
                   }
                 }
