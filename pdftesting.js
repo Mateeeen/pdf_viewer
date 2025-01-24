@@ -271,9 +271,10 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                   localStorage.setItem("commentInfo",JSON.stringify(commentInfo))
                 }
                 else{
+                  let rooId = localStorage.getItem("annotationId")
                   const commentInfo = {
                     commentId: comment.id,
-                    databaseId: comment.rootId,
+                    databaseId: rooId,
                     text: comment.text,
                     pageIndex: comment.pageIndex,
                     creatorName: comment.creatorName,
