@@ -2,6 +2,8 @@ const globalURl = "https://social-login.app-pursuenetworking.com";
 const urlParams = new URLSearchParams(window.location.search);
 const pdfFileName = urlParams.get("pdf_file_name");
 const userId = urlParams.get("user_id");
+localStorage.removeItem("commentInfo")
+localStorage.removeItem("annotationInfo")
 
 // Save to localStorage
 if (pdfFileName && userId) {
@@ -248,14 +250,30 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           // Top bar comment creation
           instance.addEventListener("comments.create", async createdComments => {
             for (const comment of createdComments) {
-              console.log(comment.toJS(),"comment")
-              const commentInfo = {
-                commentId: comment.id,
-                text: comment.text,
-                creatorName: comment.creatorName,
-                createdAt: comment.createdAt,
-              };
-              localStorage.setItem("commentInfo",JSON.stringify(commentInfo))
+              setTimeout(()=>{
+                if(localStorage.getItem("annotationInfo")){
+                  console.log(comment.toJS(),"comment")
+                  const commentInfo = {
+                    commentId: comment.id,
+                    text: comment.text,
+                    creatorName: comment.creatorName,
+                    createdAt: comment.createdAt,
+                  };
+                  localStorage.setItem("commentInfo",JSON.stringify(commentInfo))
+                }
+                else{
+                  const commentInfo = {
+                    commentId: comment.id,
+                    databaseId: comment.rootId,
+                    text: comment.text,
+                    pageIndex: comment.pageIndex,
+                    creatorName: comment.creatorName,
+                    createdAt: comment.createdAt,
+                  };
+                  localStorage.setItem("commentInfo",JSON.stringify(commentInfo))
+                  saveReplies()
+                }
+              },1500)
             }
           });
         
@@ -349,6 +367,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                     creatorName: commentInfo.creatorName,
                     createdAt: createdAt,
                     customData: {
+                      commentId: commentInfo.commentId,
                       originalCreatedAt: createdAt.toISOString(),
                       isEditable: editable,
                       avatarUrl: commentInfo.avatar || "https://default-avatar-url.com/avatar.png", // Default avatar fallback
@@ -357,20 +376,25 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             
                   await instance.create(comment);
 
-                  comment = new PSPDFKit.Comment({
-                    text: commentInfo.text,
-                    pageIndex: createdHighlight.pageIndex,
-                    rootId: createdHighlight.id,
-                    creatorName: commentInfo.creatorName,
-                    createdAt: createdAt,
-                    customData: {
-                      originalCreatedAt: createdAt.toISOString(),
-                      isEditable: editable,
-                      avatarUrl: commentInfo.avatar || "https://default-avatar-url.com/avatar.png", // Default avatar fallback
-                    },
-                  });
-            
-                  await instance.create(comment);
+                  if (commentInfo.replies) {
+                    for (const reply of commentInfo.replies) {
+                      const comment = new PSPDFKit.Comment({
+                        text: reply.text, // Use the reply's text
+                        pageIndex: createdHighlight.pageIndex,
+                        rootId: createdHighlight.id,
+                        creatorName: reply.creatorName, // Use the reply's creator name
+                        createdAt: new Date(reply.createdAt), // Convert the reply's createdAt to a Date object
+                        customData: {
+                          commentId: reply.commentId,
+                          originalCreatedAt: new Date(reply.createdAt).toISOString(), // Original createdAt in ISO format
+                          isEditable: editable,
+                          avatarUrl: reply.avatar || "https://default-avatar-url.com/avatar.png", // Fallback avatar URL
+                        },
+                      });
+                  
+                      await instance.create(comment);
+                    }
+                  }
                   
                 });
               } catch (error) {
@@ -414,6 +438,9 @@ function sendToServerPublic() {
   commentInfo.pageIndex = annotationInfo.pageIndex
   commentInfo.rects = annotationInfo.rects
 
+  localStorage.removeItem("commentInfo")
+  localStorage.removeItem("annotationInfo")
+
   try {
 
     commentInfo.user_id = localStorage.getItem("user_id")
@@ -450,6 +477,13 @@ function sendToServerPublic() {
 
 function sendToServerPrivate(){
   let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
+  let annotationInfo = JSON.parse(localStorage.getItem("annotationInfo"))
+  commentInfo.databaseId = annotationInfo.databaseId
+  commentInfo.pageIndex = annotationInfo.pageIndex
+  commentInfo.rects = annotationInfo.rects
+
+  localStorage.removeItem("commentInfo")
+  localStorage.removeItem("annotationInfo")
 
   try {
 
@@ -469,6 +503,43 @@ function sendToServerPrivate(){
       if (xhrUrlClose.readyState == 4 && xhrUrlClose.status == 201) {
         let userData = JSON.parse(xhrUrlClose.responseText);
         if(userData.message == "Comment saved successfully!"){
+          document.getElementById("commentModal").style.visibility = "hidden"
+          document.getElementById("commentModal").style.opacity = "0"
+        }
+        else
+        {
+          document.getElementById("commentModal").style.visibility = "hidden"
+          document.getElementById("commentModal").style.opacity = "0"
+        }
+      }
+    } 
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+function saveReplies(){
+  let commentInfo = JSON.parse(localStorage.getItem("commentInfo"))
+
+  try {
+
+    commentInfo.user_id = localStorage.getItem("user_id")
+    commentInfo.pdfUrl = `https://images.app-pursuenetworking.com/public/files/${pdfFileName}` 
+    const url = `${globalURl}/save_pdf_comment_replies`;
+    var xhrUrlClose = new XMLHttpRequest();
+  
+    xhrUrlClose.open("POST", url, true);
+    xhrUrlClose.setRequestHeader("Content-Type", "application/json");
+    xhrUrlClose.send(
+    JSON.stringify({
+      commentInfo,
+      })
+    ); 
+    xhrUrlClose.onreadystatechange = function () {
+      if (xhrUrlClose.readyState == 4 && xhrUrlClose.status == 201) {
+        let userData = JSON.parse(xhrUrlClose.responseText);
+        if(userData.message == "Comment reply saved successfully!"){
           document.getElementById("commentModal").style.visibility = "hidden"
           document.getElementById("commentModal").style.opacity = "0"
         }
