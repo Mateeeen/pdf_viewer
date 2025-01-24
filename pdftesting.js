@@ -191,13 +191,19 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
               let annotationId = localStorage.getItem("annotationId")
               const url = `${globalURl}/update_pdf_comment`;
               var xhrUrlClose = new XMLHttpRequest();
-            
+              let commentId = null
+              if(comment.customData){
+                commentId = comment.customData.commentId
+              }else{
+                commentId = comment.id
+              }
               xhrUrlClose.open("POST", url, true);
               xhrUrlClose.setRequestHeader("Content-Type", "application/json");
               xhrUrlClose.send(
               JSON.stringify({
                 text: comment.text,
-                databaseId: annotationId
+                databaseId: annotationId,
+                commentId: commentId
                 })
               );  
               xhrUrlClose.onreadystatechange = function () {
