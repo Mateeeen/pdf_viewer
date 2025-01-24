@@ -220,13 +220,16 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
             if (annotation instanceof PSPDFKit.Annotations.HighlightAnnotation) {
               if(annotation.customData){
                 if(annotation.customData.databaseId){
+                  console.log(annotation.customData.databaseId,"annotation.id")
                   localStorage.setItem("annotationId",annotation.customData.databaseId)            
                 }
                 else{
+                  console.log(annotation.id,"annotation.id")
                   localStorage.setItem("annotationId",annotation.id)                       
                 }
               }
               else{
+                console.log(annotation.id,"annotation.id")
                 localStorage.setItem("annotationId",annotation.id)
               }
                           
