@@ -237,8 +237,8 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           });
           
           //comment deleted
-          instance.addEventListener("comments.delete", (deletedAnnotations) => {
-            deletedAnnotations.forEach(comment => {
+          instance.addEventListener("comments.delete", (deletedComment) => {
+            deletedComment.forEach(comment => {
               let annotation = localStorage.getItem("annotationId")
               let commentId = null
               if(comment.customData){
@@ -257,10 +257,17 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                 commentId
                 })
               );  
-              xhrUrlClose.onreadystatechange = function () {
+              xhrUrlClose.onreadystatechange = async function () {
                 if (xhrUrlClose.readyState == 4 && xhrUrlClose.status == 201) {
                   let userData = JSON.parse(xhrUrlClose.responseText);
-                  
+                  if(userData.deleteAnnotation){
+                    for (const comment of deletedComment) {
+                      const annotation = await instance.getAnnotation(comment.annotationId);
+                      if (annotation) {
+                        await instance.delete(annotation);
+                      }
+                    }
+                  }
                 }
               }
             })
