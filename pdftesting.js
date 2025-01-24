@@ -348,7 +348,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                       ? PSPDFKit.Color.LIGHT_YELLOW
                       : PSPDFKit.Color.LIGHT_BLUE;
             
-                  const editable = commentInfo.user_id === localStorage.getItem("user_id");
+                  const editable = commentInfo.user_id == localStorage.getItem("user_id");
             
                   const highlightAnnotation = new PSPDFKit.Annotations.HighlightAnnotation({
                     pageIndex: commentInfo.pageIndex,
