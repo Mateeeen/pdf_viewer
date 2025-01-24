@@ -4,6 +4,7 @@ const pdfFileName = urlParams.get("pdf_file_name");
 const userId = urlParams.get("user_id");
 localStorage.removeItem("commentInfo")
 localStorage.removeItem("annotationInfo")
+localStorage.setItem("start",true)
 
 // Save to localStorage
 if (pdfFileName && userId) {
@@ -65,7 +66,6 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           { type: "annotate" },     
           { type: "print" },              // Print button
           { type: "export-pdf" }, 
-          { type: "comment" }
         ],
 
         inlineTextSelectionToolbarItems: ({ defaultItems }) => {
@@ -280,31 +280,39 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           // Top bar comment creation
           instance.addEventListener("comments.create", async createdComments => {
             for (const comment of createdComments) {
-              setTimeout(()=>{
-                if(localStorage.getItem("annotationInfo")){
-                  console.log(comment.toJS(),"comment")
-                  const commentInfo = {
-                    commentId: comment.id,
-                    text: comment.text,
-                    creatorName: comment.creatorName,
-                    createdAt: comment.createdAt,
-                  };
-                  localStorage.setItem("commentInfo",JSON.stringify(commentInfo))
-                }
-                else{
-                  let rooId = localStorage.getItem("annotationId")
-                  const commentInfo = {
-                    commentId: comment.id,
-                    databaseId: rooId,
-                    text: comment.text,
-                    pageIndex: comment.pageIndex,
-                    creatorName: comment.creatorName,
-                    createdAt: comment.createdAt,
-                  };
-                  localStorage.setItem("commentInfo",JSON.stringify(commentInfo))
-                  saveReplies()
-                }
-              },1500)
+              if(!localStorage.getItem("start")){
+                setTimeout(()=>{
+                  if(localStorage.getItem("annotationInfo")){
+                    console.log(comment.toJS(),"comment")
+                    const commentInfo = {
+                      commentId: comment.id,
+                      text: comment.text,
+                      creatorName: comment.creatorName,
+                      createdAt: comment.createdAt,
+                    };
+                    localStorage.setItem("commentInfo",JSON.stringify(commentInfo))
+                  }
+                  else
+                  {
+                    let rooId = localStorage.getItem("annotationId")
+                    const commentInfo = {
+                      commentId: comment.id,
+                      databaseId: rooId,
+                      text: comment.text,
+                      pageIndex: comment.pageIndex,
+                      creatorName: comment.creatorName,
+                      createdAt: comment.createdAt,
+                    };
+                    localStorage.setItem("commentInfo",JSON.stringify(commentInfo))
+                    saveReplies()
+                  }
+                },1500)
+              }
+              else{
+                setTimeout(()=>{
+                  localStorage.removeItem("start")
+                },3000)
+              }
             }
           });
         
