@@ -238,22 +238,32 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
           
           //comment deleted
           instance.addEventListener("annotations.delete", (deletedAnnotations) => {
-            let annotation = localStorage.getItem("annotationId")
-                const url = `${globalURl}/delete_pdf_comment`;
-                var xhrUrlClose = new XMLHttpRequest();
-                xhrUrlClose.open("POST", url, true);
-                xhrUrlClose.setRequestHeader("Content-Type", "application/json");
-                xhrUrlClose.send(
-                JSON.stringify({
-                  databaseId: annotation
-                  })
-                );  
-                xhrUrlClose.onreadystatechange = function () {
-                  if (xhrUrlClose.readyState == 4 && xhrUrlClose.status == 201) {
-                    let userData = JSON.parse(xhrUrlClose.responseText);
-                    
-                  }
+            deletedAnnotations.forEach(comment => {
+              let annotation = localStorage.getItem("annotationId")
+              let commentId = null
+              if(comment.customData){
+                commentId = comment.customData.commentId
+              }else{
+                commentId = comment.id
+              }
+            
+              const url = `${globalURl}/delete_pdf_comment`;
+              var xhrUrlClose = new XMLHttpRequest();
+              xhrUrlClose.open("POST", url, true);
+              xhrUrlClose.setRequestHeader("Content-Type", "application/json");
+              xhrUrlClose.send(
+              JSON.stringify({
+                databaseId: annotation,
+                commentId
+                })
+              );  
+              xhrUrlClose.onreadystatechange = function () {
+                if (xhrUrlClose.readyState == 4 && xhrUrlClose.status == 201) {
+                  let userData = JSON.parse(xhrUrlClose.responseText);
+                  
                 }
+              }
+            })
           });
 
           // Top bar comment creation
