@@ -67,7 +67,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
 
     if (pdfFileName) {
       const documentUrl = `https://social-login.app-pursuenetworking.com/public/files/${pdfFileName}`;
-
+      PSPDFKit.unsetLogHandler();
       PSPDFKit.load({
         baseUrl,
         container: "#pspdfkit",
