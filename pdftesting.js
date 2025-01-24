@@ -379,7 +379,7 @@ const loadPdfWithPage = (currentPage,comments, creatorName) => {
                   if (commentInfo.replies) {
                     for (const reply of commentInfo.replies) {
                       const comment = new PSPDFKit.Comment({
-                        text: reply.text, // Use the reply's text
+                        text: JSON.parse(reply.text), // Use the reply's text
                         pageIndex: createdHighlight.pageIndex,
                         rootId: createdHighlight.id,
                         creatorName: reply.creatorName, // Use the reply's creator name
